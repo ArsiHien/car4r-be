@@ -1,0 +1,13 @@
+package com.uet.car4r;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class Car4rApplicationTests {
+
+	@Test
+	void contextLoads() {
+	}
+
+}

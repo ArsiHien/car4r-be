@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: car4r
+  profiles:
+    active: local
+
+#  create application-local.yml
+#spring:
+#  datasource:
+#    url:
+#    username:
+#    password:

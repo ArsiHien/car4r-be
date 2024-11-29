@@ -33,4 +33,4 @@ build/
 .vscode/
 
 # Local environment config
-application-dev.yml
+./src/main/resources/application-dev.yml

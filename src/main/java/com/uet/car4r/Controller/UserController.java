@@ -30,6 +30,7 @@ public class UserController {
   @PostMapping(path = "/register")
   public ResponseEntity<ResponseDTO> register(@RequestBody UserDTO userDTO) {
     logger.info("email: " + userDTO.getEmail() + "\n" + "password: " + userDTO.getPassword());
+
     ResponseDTO responseDTO = ResponseDTO.builder()
         .endpoint("/api/v1/users/register")
         .message(TypeMessage.SUCCESS)

@@ -1,0 +1,5 @@
+ae xem trong spring profile de tu cau hinh nha
+application-common.yml: luu cau hinh chung 
+application-dev.yml: luu cau hinh tren moi truong dev  
+application-product.yml: luu cau hinh tren moi truong product 
+application.yml: spring boot lay cau hinh o file nay 

@@ -34,7 +34,7 @@ public class UserController {
     ResponseDTO responseDTO = ResponseDTO.builder()
         .endpoint("/api/v1/users/register")
         .message(TypeMessage.SUCCESS)
-        .messageDetail("").build();
+        .messageDetail("a").build();
     return ResponseEntity.ok(responseDTO);
   }
 }

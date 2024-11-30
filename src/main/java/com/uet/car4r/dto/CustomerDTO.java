@@ -1,4 +1,4 @@
-package com.uet.car4r.DTO;
+package com.uet.car4r.dto;
 
 /**
  * CustomerDTO

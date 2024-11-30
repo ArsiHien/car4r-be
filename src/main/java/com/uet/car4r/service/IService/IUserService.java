@@ -1,6 +1,6 @@
-package com.uet.car4r.Service.IService;
+package com.uet.car4r.service.IService;
 
-import com.uet.car4r.DTO.ResponseDTO;
+import com.uet.car4r.dto.ResponseDTO;
 
 public interface IUserService {
   public ResponseDTO login();

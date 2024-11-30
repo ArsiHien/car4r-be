@@ -13,10 +13,10 @@ import org.springframework.stereotype.Component;
 public class Jwt {
   private final String SECRETKEY = "";
 
-  public String generateToken() {
-    return Jwts.builder()
-        .setHeader(Header)
-        .setClaims()
-        .signWith(SECRETKEY);
-  }
+//  public String generateToken() {
+//    return Jwts.builder()
+//        .setHeader(Header.JWT_TYPE)
+//        .setClaims()
+//        .signWith(SECRETKEY);
+//  }
 }

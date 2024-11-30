@@ -1,4 +1,4 @@
-package com.uet.car4r.Constant;
+package com.uet.car4r.constant;
 
 public enum TypeMessage {
   SUCCESS,

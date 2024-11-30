@@ -1,5 +1,6 @@
 package com.uet.car4r.config;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,6 +16,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+  private final Dotenv env = Dotenv.load();
+
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
@@ -38,4 +41,5 @@ public class SecurityConfig {
     urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", configuration);
     return urlBasedCorsConfigurationSource;
   }
+  
 }

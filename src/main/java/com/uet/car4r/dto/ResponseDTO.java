@@ -1,6 +1,6 @@
 package com.uet.car4r.dto;
 
-import com.uet.car4r.Constant.TypeMessage;
+import com.uet.car4r.constant.TypeMessage;
 import lombok.Builder;
 import lombok.Getter;
 

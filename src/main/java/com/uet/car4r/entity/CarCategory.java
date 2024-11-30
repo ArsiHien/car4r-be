@@ -11,6 +11,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@EqualsAndHashCode(exclude = {"cars", "carImages", "amenities"})
 @Entity
 public class CarCategory {
     @Id
@@ -21,14 +22,26 @@ public class CarCategory {
     String description;
     int numberOfPerson;
     int price;
+    Steering steering;
+    int gasoline;
     int promotionPrice;
-    String mainImageUrl;
+    String mainImage;
 
-    @ManyToMany
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    Set<Car> cars;
+
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    Set<CarImage> carImages;
+
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "car_amenities",
             joinColumns = @JoinColumn(name = "car_category_id"),
             inverseJoinColumns = @JoinColumn(name = "amenity_id")
     )
-    private Set<Amenity> amenities;
+    Set<Amenity> amenities;
+
+    public enum Steering {
+        MANUAL, ELECTRIC
+    }
 }

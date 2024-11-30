@@ -1,5 +1,6 @@
 package com.uet.car4r.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -19,6 +20,7 @@ public class Amenity {
 
     String name;
 
-    @ManyToMany(mappedBy = "amenities")
+    @ManyToMany(mappedBy = "amenities", cascade = CascadeType.ALL)
+    @JsonIgnore
     Set<CarCategory> carCategories;
 }

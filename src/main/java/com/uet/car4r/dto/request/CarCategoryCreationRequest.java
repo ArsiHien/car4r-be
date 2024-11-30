@@ -1,8 +1,8 @@
-package com.uet.car4r.entity;
+package com.uet.car4r.dto.request;
 
-import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Set;
 
@@ -16,8 +16,11 @@ public class CarCategoryCreationRequest {
     String type;
     String description;
     int numberOfPerson;
+    String steering;
+    int gasoline;
     int price;
     int promotionPrice;
-    String mainImageUrl;
-    private Set<Amenity> amenities;
+    MultipartFile mainImage;
+    Set<MultipartFile> carImages;
+    Set<String> amenityNames;
 }

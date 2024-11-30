@@ -17,11 +17,13 @@ public class ImageUploadService {
 
     public String uploadImage(MultipartFile file) throws IOException {
         try {
+            String uniquePublicId = "car_image_" + System.currentTimeMillis();
             Map uploadResult = cloudinary.uploader().upload(file.getBytes(),
                     ObjectUtils.asMap(
+                            "public_id", uniquePublicId,
                             "use_filename", true,
                             "unique_filename", false,
-                            "overwrite", true
+                            "overwrite", false
                     ));
             return uploadResult.get("url").toString();
         } catch (IOException e) {

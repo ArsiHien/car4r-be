@@ -1,6 +1,9 @@
 package com.uet.car4r.dto.response;
 
 import com.uet.car4r.entity.Amenity;
+import com.uet.car4r.entity.Car;
+import com.uet.car4r.entity.CarCategory;
+import com.uet.car4r.entity.CarImage;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -17,8 +20,12 @@ public class CarCategoryResponse {
     String type;
     String description;
     int numberOfPerson;
+    CarCategory.Steering steering;
+    int gasoline;
     int price;
     int promotionPrice;
-    String mainImageUrl;
+    String mainImage;
+    Set<Car> cars;
+    Set<CarImage> carImages;
     Set<Amenity> amenities;
 }

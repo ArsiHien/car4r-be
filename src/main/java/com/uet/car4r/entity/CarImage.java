@@ -1,5 +1,6 @@
 package com.uet.car4r.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -15,9 +16,9 @@ public class CarImage {
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonIgnore
     CarCategory category;
 
     String imageUrl;
-
 }

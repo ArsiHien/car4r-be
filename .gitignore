@@ -34,3 +34,6 @@ build/
 
 # Local environment config
 application-dev.yml
+
+# Environment variable
+.env

@@ -1,10 +1,8 @@
-package com.uet.car4r.DTO;
+package com.uet.car4r.dto;
 
 import com.uet.car4r.Constant.TypeMessage;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 /**
  * ResponseDTO

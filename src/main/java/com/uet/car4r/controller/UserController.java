@@ -1,4 +1,4 @@
-package com.uet.car4r.Controller;
+package com.uet.car4r.controller;
 
 import com.uet.car4r.Constant.TypeMessage;
 import org.slf4j.Logger;
@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.uet.car4r.DTO.ResponseDTO;
-import com.uet.car4r.DTO.UserDTO;
+import com.uet.car4r.dto.ResponseDTO;
+import com.uet.car4r.dto.UserDTO;
 
 /**
  * UserController: api login & api register

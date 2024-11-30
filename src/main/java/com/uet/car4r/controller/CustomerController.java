@@ -1,4 +1,4 @@
-package com.uet.car4r.Controller;
+package com.uet.car4r.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

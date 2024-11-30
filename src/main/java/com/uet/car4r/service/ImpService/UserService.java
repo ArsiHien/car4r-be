@@ -1,7 +1,7 @@
-package com.uet.car4r.Service.ImpService;
+package com.uet.car4r.service.ImpService;
 
-import com.uet.car4r.DTO.ResponseDTO;
-import com.uet.car4r.Service.IService.IUserService;
+import com.uet.car4r.dto.ResponseDTO;
+import com.uet.car4r.service.IService.IUserService;
 import org.springframework.stereotype.Service;
 
 @Service

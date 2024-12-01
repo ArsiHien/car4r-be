@@ -2,10 +2,7 @@ package com.uet.car4r.service;
 
 import com.uet.car4r.dto.request.CarCategoryCreationRequest;
 import com.uet.car4r.dto.request.CarCategoryUpdateRequest;
-import com.uet.car4r.dto.response.AmenityResponse;
-import com.uet.car4r.dto.response.CarCategoryBasicResponse;
-import com.uet.car4r.dto.response.CarCategoryDetailResponse;
-import com.uet.car4r.dto.response.CarImageResponse;
+import com.uet.car4r.dto.response.*;
 import com.uet.car4r.entity.Amenity;
 import com.uet.car4r.entity.CarCategory;
 import com.uet.car4r.entity.CarImage;
@@ -111,6 +108,16 @@ public class CarCategoryService {
         carCategory.getAmenities().clear();
         carCategoryRepository.save(carCategory);
         carCategoryRepository.deleteById(id);
+    }
+
+    public List<CarCategoryCountResponse> getCarCategoryCountByType() {
+        return carCategoryRepository.countCarCategoryByType().stream()
+                .map(carCategoryMapper::toCarCategoryCountResponse).toList();
+    }
+
+    public List<CarCategoryCountResponse> getCarCategoryCountByNumberOfPerson() {
+        return carCategoryRepository.countCarCategoryByNumberOfPerson().stream()
+                .map(carCategoryMapper::toCarCategoryCountResponse).toList();
     }
 
     private String uploadMainImage(MultipartFile mainImage) {

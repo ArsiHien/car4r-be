@@ -3,9 +3,11 @@ package com.uet.car4r.mapper;
 import com.uet.car4r.dto.request.CarCategoryCreationRequest;
 import com.uet.car4r.dto.request.CarCategoryUpdateRequest;
 import com.uet.car4r.dto.response.CarCategoryBasicResponse;
+import com.uet.car4r.dto.response.CarCategoryCountResponse;
 import com.uet.car4r.dto.response.CarCategoryDetailResponse;
 import com.uet.car4r.entity.CarCategory;
 import com.uet.car4r.projection.BasicCarCategoryProjection;
+import com.uet.car4r.projection.CarCategoryCountProjection;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -37,4 +39,6 @@ public interface CarCategoryMapper {
     @Mapping(target = "carImages", ignore = true)
     @Mapping(target = "amenities", ignore = true)
     void updateCarCategory(@MappingTarget CarCategory carCategory, CarCategoryUpdateRequest request);
+
+    CarCategoryCountResponse toCarCategoryCountResponse(CarCategoryCountProjection carCategoryCountProjection);
 }

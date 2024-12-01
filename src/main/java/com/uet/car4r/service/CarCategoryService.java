@@ -1,13 +1,23 @@
 package com.uet.car4r.service;
 
 import com.uet.car4r.dto.request.CarCategoryCreationRequest;
-import com.uet.car4r.dto.response.CarCategoryResponse;
+import com.uet.car4r.dto.request.CarCategoryUpdateRequest;
+import com.uet.car4r.dto.response.AmenityResponse;
+import com.uet.car4r.dto.response.CarCategoryBasicResponse;
+import com.uet.car4r.dto.response.CarCategoryDetailResponse;
+import com.uet.car4r.dto.response.CarImageResponse;
 import com.uet.car4r.entity.Amenity;
 import com.uet.car4r.entity.CarCategory;
 import com.uet.car4r.entity.CarImage;
+import com.uet.car4r.mapper.AmenityMapper;
 import com.uet.car4r.mapper.CarCategoryMapper;
+import com.uet.car4r.mapper.CarImageMapper;
+import com.uet.car4r.projection.BasicCarCategoryProjection;
 import com.uet.car4r.repository.AmenityRepository;
 import com.uet.car4r.repository.CarCategoryRepository;
+import com.uet.car4r.repository.CarImageRepository;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -25,29 +35,82 @@ import java.util.stream.Collectors;
 public class CarCategoryService {
     CarCategoryRepository carCategoryRepository;
     AmenityRepository amenityRepository;
+    CarImageRepository carImageRepository;
     ImageUploadService imageUploadService;
     CarCategoryMapper carCategoryMapper;
+    CarImageMapper carImageMapper;
+    AmenityMapper amenityMapper;
 
-    public List<CarCategoryResponse> getCarCategories() {
-        return carCategoryRepository.findAll().stream().map(carCategoryMapper::toCarCategoryResponse).toList();
+    public List<CarCategoryDetailResponse> getDetailCarCategories() {
+        List<BasicCarCategoryProjection> projections = carCategoryRepository.findAllBasicCarCategories();
+        return projections.stream().map(basicCarCategoryProjection -> {
+            CarCategoryDetailResponse response = carCategoryMapper.toCarCategoryDetailResponse(basicCarCategoryProjection);
+            Set<CarImageResponse> carImages = carImageRepository.findByCategoryId(basicCarCategoryProjection.getId())
+                    .stream()
+                    .map(carImageMapper::toCarImageResponse)
+                    .collect(Collectors.toSet());
+            Set<AmenityResponse> amenities = amenityRepository.findByCarCategoryId(basicCarCategoryProjection.getId())
+                    .stream()
+                    .map(amenityMapper::toAmenityResponse)
+                    .collect(Collectors.toSet());
+            response.setCarImages(carImages);
+            response.setAmenities(amenities);
+            return response;
+        }).collect(Collectors.toList());
     }
 
-    public CarCategoryResponse createCarCategory(CarCategoryCreationRequest request) {
-        String mainImageUrl = uploadMainImage(request.getMainImage());
+    public List<CarCategoryBasicResponse> getBasicCarCategories() {
+        List<BasicCarCategoryProjection> projections = carCategoryRepository.findAllBasicCarCategories();
 
+        return projections.stream()
+                .map(carCategoryMapper::toCarCategoryBasicResponse)
+                .collect(Collectors.toList());
+    }
+
+    public CarCategoryDetailResponse getCarCategory(String id) {
+        return carCategoryMapper.toCarCategoryDetailResponse(
+                carCategoryRepository.findById(id).orElse(null)
+        );
+    }
+
+    public CarCategoryDetailResponse createCarCategory(CarCategoryCreationRequest request) {
+        String mainImageUrl = uploadMainImage(request.getMainImage());
         CarCategory carCategory = carCategoryMapper.toCarCategory(request);
         carCategory.setMainImage(mainImageUrl);
-
         if (request.getAmenityNames() != null) {
             carCategory.setAmenities(resolveAmenities(request.getAmenityNames()));
         }
-
         if (request.getCarImages() != null && !request.getCarImages().isEmpty()) {
             carCategory.setCarImages(uploadCarImages(request.getCarImages(), carCategory));
         }
-
         CarCategory savedCarCategory = carCategoryRepository.save(carCategory);
-        return carCategoryMapper.toCarCategoryResponse(savedCarCategory);
+        return carCategoryMapper.toCarCategoryDetailResponse(savedCarCategory);
+    }
+
+    @Transactional
+    public CarCategoryDetailResponse updateCarCategory(String carCategoryId, CarCategoryUpdateRequest request) {
+        CarCategory carCategory = carCategoryRepository.findById(carCategoryId)
+                .orElseThrow(() -> new RuntimeException("Car category not found"));
+        carCategoryMapper.updateCarCategory(carCategory, request);
+        if (request.getMainImage() != null) {
+            carCategory.setMainImage(uploadMainImage(request.getMainImage()));
+        }
+        if (request.getAmenityNames() != null) {
+            carCategory.setAmenities(resolveAmenities(request.getAmenityNames()));
+        }
+        if (request.getCarImages() != null && !request.getCarImages().isEmpty()) {
+            carCategory.setCarImages(uploadCarImages(request.getCarImages(), carCategory));
+        }
+        return carCategoryMapper.toCarCategoryDetailResponse(carCategoryRepository.save(carCategory));
+    }
+
+    public void deleteCarCategory(String id) {
+        CarCategory carCategory = carCategoryRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("CarCategory not found with id: " + id));
+
+        carCategory.getAmenities().clear();
+        carCategoryRepository.save(carCategory);
+        carCategoryRepository.deleteById(id);
     }
 
     private String uploadMainImage(MultipartFile mainImage) {
@@ -66,10 +129,13 @@ public class CarCategoryService {
     }
 
     private Set<CarImage> uploadCarImages(Set<MultipartFile> carImages, CarCategory carCategory) {
+        deleteOldImages(carCategory);
+
         return carImages.stream()
                 .map(imageFile -> {
                     try {
                         String imageUrl = imageUploadService.uploadImage(imageFile);
+
                         return CarImage.builder()
                                 .category(carCategory)
                                 .imageUrl(imageUrl)
@@ -79,6 +145,18 @@ public class CarCategoryService {
                     }
                 })
                 .collect(Collectors.toSet());
+    }
+
+    private void deleteOldImages(CarCategory carCategory) {
+        Set<CarImage> oldImages = carCategory.getCarImages();
+
+        System.out.println("old: " + oldImages);
+        if (oldImages != null && !oldImages.isEmpty()) {
+            carCategory.getCarImages().clear();
+            carImageRepository.deleteByCategoryId(carCategory.getId());
+        }
+        System.out.println("after: " + carCategory.getCarImages());
+        System.out.println("db " + carImageRepository.findByCategoryId(carCategory.getId()));
     }
 
 }

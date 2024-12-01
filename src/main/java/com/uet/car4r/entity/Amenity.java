@@ -1,11 +1,11 @@
 package com.uet.car4r.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.util.Set;
 
 @Data
 @Builder
@@ -19,8 +19,4 @@ public class Amenity {
     String id;
 
     String name;
-
-    @ManyToMany(mappedBy = "amenities", cascade = CascadeType.ALL)
-    @JsonIgnore
-    Set<CarCategory> carCategories;
 }

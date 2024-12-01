@@ -15,10 +15,10 @@ public class ImageUploadService {
 
     private final Cloudinary cloudinary;
 
-    public String uploadImage(MultipartFile file) throws IOException {
+    public String uploadImage(MultipartFile image) throws IOException {
         try {
             String uniquePublicId = "car_image_" + System.currentTimeMillis();
-            Map uploadResult = cloudinary.uploader().upload(file.getBytes(),
+            Map uploadResult = cloudinary.uploader().upload(image.getBytes(),
                     ObjectUtils.asMap(
                             "public_id", uniquePublicId,
                             "use_filename", true,

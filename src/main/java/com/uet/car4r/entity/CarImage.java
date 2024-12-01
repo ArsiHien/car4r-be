@@ -10,6 +10,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@ToString(exclude = "category")
 @Entity
 public class CarImage {
     @Id
@@ -17,7 +18,6 @@ public class CarImage {
     String id;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonIgnore
     CarCategory category;
 
     String imageUrl;

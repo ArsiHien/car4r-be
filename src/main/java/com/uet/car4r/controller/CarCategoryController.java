@@ -1,7 +1,6 @@
 package com.uet.car4r.controller;
 
-import com.uet.car4r.dto.request.CarCategoryCreationRequest;
-import com.uet.car4r.dto.request.CarCategoryUpdateRequest;
+import com.uet.car4r.dto.request.CarCategoryRequest;
 import com.uet.car4r.dto.response.CarCategoryBasicResponse;
 import com.uet.car4r.dto.response.CarCategoryCountResponse;
 import com.uet.car4r.dto.response.CarCategoryDetailResponse;
@@ -38,15 +37,13 @@ public class CarCategoryController {
     }
 
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<CarCategoryDetailResponse> createCarCategory(@ModelAttribute CarCategoryCreationRequest request) {
-        System.out.println("Request in controller: " + request);
+    public ResponseEntity<CarCategoryDetailResponse> createCarCategory(@ModelAttribute CarCategoryRequest request) {
         CarCategoryDetailResponse response = carCategoryService.createCarCategory(request);
         return ResponseEntity.ok(response);
     }
 
     @PutMapping(value = "/{carCategoryId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<CarCategoryDetailResponse> updateCarCategoryDetail(@PathVariable String carCategoryId, @ModelAttribute CarCategoryUpdateRequest request) {
-        System.out.println("PUT Request in controller: " + request);
+    public ResponseEntity<CarCategoryDetailResponse> updateCarCategoryDetail(@PathVariable String carCategoryId, @ModelAttribute CarCategoryRequest request) {
         CarCategoryDetailResponse response = carCategoryService.updateCarCategory(carCategoryId, request);
         return ResponseEntity.ok(response);
     }
@@ -67,5 +64,11 @@ public class CarCategoryController {
     public ResponseEntity<List<CarCategoryCountResponse>> countCarCategoryByNumberOfPerson() {
         List<CarCategoryCountResponse> response = carCategoryService.getCarCategoryCountByNumberOfPerson();
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/types")
+    public ResponseEntity<List<String>> getCarCategoryTypes() {
+        List<String> types = carCategoryService.getCarCategoryTypes();
+        return ResponseEntity.ok(types);
     }
 }

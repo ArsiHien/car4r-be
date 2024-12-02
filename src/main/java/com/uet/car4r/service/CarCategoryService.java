@@ -9,10 +9,13 @@ import com.uet.car4r.entity.CarImage;
 import com.uet.car4r.mapper.AmenityMapper;
 import com.uet.car4r.mapper.CarCategoryMapper;
 import com.uet.car4r.mapper.CarImageMapper;
+import com.uet.car4r.mapper.ReviewMapper;
 import com.uet.car4r.projection.BasicCarCategoryProjection;
+import com.uet.car4r.projection.DetailCarCategoryProjection;
 import com.uet.car4r.repository.AmenityRepository;
 import com.uet.car4r.repository.CarCategoryRepository;
 import com.uet.car4r.repository.CarImageRepository;
+import com.uet.car4r.repository.ReviewRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
@@ -33,28 +36,12 @@ public class CarCategoryService {
     CarCategoryRepository carCategoryRepository;
     AmenityRepository amenityRepository;
     CarImageRepository carImageRepository;
+    ReviewRepository reviewRepository;
     ImageUploadService imageUploadService;
     CarCategoryMapper carCategoryMapper;
     CarImageMapper carImageMapper;
     AmenityMapper amenityMapper;
-
-    public List<CarCategoryDetailResponse> getDetailCarCategories() {
-        List<BasicCarCategoryProjection> projections = carCategoryRepository.findAllBasicCarCategories();
-        return projections.stream().map(basicCarCategoryProjection -> {
-            CarCategoryDetailResponse response = carCategoryMapper.toCarCategoryDetailResponse(basicCarCategoryProjection);
-            Set<CarImageResponse> carImages = carImageRepository.findByCategoryId(basicCarCategoryProjection.getId())
-                    .stream()
-                    .map(carImageMapper::toCarImageResponse)
-                    .collect(Collectors.toSet());
-            Set<AmenityResponse> amenities = amenityRepository.findByCarCategoryId(basicCarCategoryProjection.getId())
-                    .stream()
-                    .map(amenityMapper::toAmenityResponse)
-                    .collect(Collectors.toSet());
-            response.setCarImages(carImages);
-            response.setAmenities(amenities);
-            return response;
-        }).collect(Collectors.toList());
-    }
+    ReviewMapper reviewMapper;
 
     public List<CarCategoryBasicResponse> getBasicCarCategories() {
         List<BasicCarCategoryProjection> projections = carCategoryRepository.findAllBasicCarCategories();
@@ -64,10 +51,17 @@ public class CarCategoryService {
                 .collect(Collectors.toList());
     }
 
+    public List<CarCategoryDetailResponse> getDetailCarCategories() {
+        List<DetailCarCategoryProjection> projections = carCategoryRepository.findAllDetailCarCategories();
+
+        return projections.stream()
+                .map(this::buildCarCategoryDetailResponse)
+                .collect(Collectors.toList());
+    }
+
     public CarCategoryDetailResponse getCarCategory(String id) {
-        return carCategoryMapper.toCarCategoryDetailResponse(
-                carCategoryRepository.findById(id).orElse(null)
-        );
+        DetailCarCategoryProjection projection = carCategoryRepository.findDetailCarCategoryById(id);
+        return buildCarCategoryDetailResponse(projection);
     }
 
     public CarCategoryDetailResponse createCarCategory(CarCategoryCreationRequest request) {
@@ -157,13 +151,45 @@ public class CarCategoryService {
     private void deleteOldImages(CarCategory carCategory) {
         Set<CarImage> oldImages = carCategory.getCarImages();
 
-        System.out.println("old: " + oldImages);
         if (oldImages != null && !oldImages.isEmpty()) {
             carCategory.getCarImages().clear();
             carImageRepository.deleteByCategoryId(carCategory.getId());
         }
-        System.out.println("after: " + carCategory.getCarImages());
-        System.out.println("db " + carImageRepository.findByCategoryId(carCategory.getId()));
+    }
+
+    private CarCategoryDetailResponse buildCarCategoryDetailResponse(DetailCarCategoryProjection projection) {
+        CarCategoryDetailResponse carCategoryDetailResponse = carCategoryMapper.toCarCategoryDetailResponse(projection);
+
+        Set<CarImageResponse> carImages = fetchCarImages(projection.getId());
+        Set<AmenityResponse> amenities = fetchAmenities(projection.getId());
+        Set<ReviewResponse> reviews = fetchReviews(projection.getId());
+
+        carCategoryDetailResponse.setCarImages(carImages);
+        carCategoryDetailResponse.setAmenities(amenities);
+        carCategoryDetailResponse.setReviews(reviews);
+
+        return carCategoryDetailResponse;
+    }
+
+    private Set<CarImageResponse> fetchCarImages(String categoryId) {
+        return carImageRepository.findByCategoryId(categoryId)
+                .stream()
+                .map(carImageMapper::toCarImageResponse)
+                .collect(Collectors.toSet());
+    }
+
+    private Set<AmenityResponse> fetchAmenities(String categoryId) {
+        return amenityRepository.findByCategoryId(categoryId)
+                .stream()
+                .map(amenityMapper::toAmenityResponse)
+                .collect(Collectors.toSet());
+    }
+
+    private Set<ReviewResponse> fetchReviews(String categoryId) {
+        return reviewRepository.findByCategoryId(categoryId)
+                .stream()
+                .map(reviewMapper::toReviewResponse)
+                .collect(Collectors.toSet());
     }
 
 }

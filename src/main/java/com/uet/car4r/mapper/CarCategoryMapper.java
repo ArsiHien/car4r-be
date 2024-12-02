@@ -8,6 +8,7 @@ import com.uet.car4r.dto.response.CarCategoryDetailResponse;
 import com.uet.car4r.entity.CarCategory;
 import com.uet.car4r.projection.BasicCarCategoryProjection;
 import com.uet.car4r.projection.CarCategoryCountProjection;
+import com.uet.car4r.projection.DetailCarCategoryProjection;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -33,6 +34,8 @@ public interface CarCategoryMapper {
     CarCategoryBasicResponse toCarCategoryBasicResponse(BasicCarCategoryProjection basicCarCategoryProjection);
 
     CarCategoryDetailResponse toCarCategoryDetailResponse(BasicCarCategoryProjection basicCarCategoryProjection);
+
+    CarCategoryDetailResponse toCarCategoryDetailResponse(DetailCarCategoryProjection detailCarCategoryProjection);
 
     @Mapping(target = "steering", source = "steering", qualifiedByName = "mapSteering")
     @Mapping(target = "mainImage", ignore = true)

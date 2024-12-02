@@ -4,25 +4,27 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDate;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@ToString(exclude = "category")
 @Entity
-public class Car {
+public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    Customer customer;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     CarCategory category;
 
-    String licensePlate;
-    CarStatus status;
-
-    public enum CarStatus {
-        AVAILABLE, RENTED, MAINTENANCE
-    }
-
+    String review;
+    int rating;
+    LocalDate reviewDate;
 }

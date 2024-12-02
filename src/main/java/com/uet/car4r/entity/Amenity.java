@@ -1,17 +1,18 @@
 package com.uet.car4r.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.util.Set;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@ToString(exclude = "carCategories")
 @Entity
 public class Amenity {
     @Id
@@ -19,4 +20,7 @@ public class Amenity {
     String id;
 
     String name;
+
+    @ManyToMany(mappedBy = "amenities", cascade = CascadeType.ALL)
+    Set<CarCategory> carCategories;
 }

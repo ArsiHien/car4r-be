@@ -24,4 +24,5 @@ public class CarCategoryDetailResponse {
     String mainImage;
     Set<CarImageResponse> carImages;
     Set<AmenityResponse> amenities;
+    Set<ReviewResponse> reviews;
 }

@@ -1,7 +1,6 @@
 package com.uet.car4r.mapper;
 
-import com.uet.car4r.dto.request.CarCategoryCreationRequest;
-import com.uet.car4r.dto.request.CarCategoryUpdateRequest;
+import com.uet.car4r.dto.request.CarCategoryRequest;
 import com.uet.car4r.dto.response.CarCategoryBasicResponse;
 import com.uet.car4r.dto.response.CarCategoryCountResponse;
 import com.uet.car4r.dto.response.CarCategoryDetailResponse;
@@ -20,7 +19,7 @@ public interface CarCategoryMapper {
     @Mapping(target = "mainImage", ignore = true)
     @Mapping(target = "carImages", ignore = true)
     @Mapping(target = "amenities", ignore = true)
-    CarCategory toCarCategory(CarCategoryCreationRequest request);
+    CarCategory toCarCategory(CarCategoryRequest request);
 
     @Named("mapSteering")
     default CarCategory.Steering mapSteering(String steering) {
@@ -41,7 +40,7 @@ public interface CarCategoryMapper {
     @Mapping(target = "mainImage", ignore = true)
     @Mapping(target = "carImages", ignore = true)
     @Mapping(target = "amenities", ignore = true)
-    void updateCarCategory(@MappingTarget CarCategory carCategory, CarCategoryUpdateRequest request);
+    void updateCarCategory(@MappingTarget CarCategory carCategory, CarCategoryRequest request);
 
     CarCategoryCountResponse toCarCategoryCountResponse(CarCategoryCountProjection carCategoryCountProjection);
 }

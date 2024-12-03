@@ -29,7 +29,7 @@ public class CarService {
     CarCategoryRepository carCategoryRepository;
 
     public CarResponse getCarByCarCategory(String carCategoryId) {
-        CarWithCountProjection countProjection = carRepository.findCarCountByCategoryId(carCategoryId);
+        CarWithCountProjection countProjection = carRepository.findCarWithCountByCategoryId(carCategoryId);
         if (countProjection == null) {
             throw new EntityNotFoundException("No cars found for the specified category");
         }

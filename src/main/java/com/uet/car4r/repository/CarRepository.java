@@ -19,7 +19,7 @@ public interface CarRepository extends JpaRepository<Car, String> {
                 WHERE c.category.id = :carCategoryId
                 GROUP BY c.category.id
             """)
-    CarWithCountProjection findCarCountByCategoryId(@Param("carCategoryId") String carCategoryId);
+    CarWithCountProjection findCarWithCountByCategoryId(@Param("carCategoryId") String carCategoryId);
 
     @Query("""
                 SELECT c.id AS id, 

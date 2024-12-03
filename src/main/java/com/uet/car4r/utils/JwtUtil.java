@@ -2,11 +2,14 @@ package com.uet.car4r.utils;
 
 import io.github.cdimascio.dotenv.Dotenv;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import java.security.Key;
 import java.util.Base64;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,6 +22,7 @@ import org.springframework.stereotype.Component;
 public class JwtUtil {
   private final Dotenv dotenv = Dotenv.load();
   private final String SECRETE_KEY = dotenv.get("SECRET_KEY");
+  private final long expirationTime = 1000 * 60 * 1;
 
   public String generateToken(UserDetails userDetails) {
     Map<String, Object> claims = new HashMap<>();
@@ -31,6 +35,15 @@ public class JwtUtil {
         .compact();
   }
 
+  public String generateTokenValidateRegister() {
+    long now = System.currentTimeMillis();
+    return Jwts.builder()
+        .setSubject("CAR$R")
+        .setIssuedAt(new Date(now))
+        .setExpiration(new Date(now + expirationTime))
+        .compact();
+  }
+
   public Claims extractToken(String token) {
     return Jwts.parserBuilder()
         .setSigningKey(SECRETE_KEY)
@@ -39,8 +52,26 @@ public class JwtUtil {
         .getBody();
   }
 
+  public Boolean validateToken(String token) {
+    try {
+      Claims claims = extractToken(token);
+      if (claims.getExpiration().before(new Date()) || !claims.getSubject().equals("CAR$R")) {
+        return false;
+      }
+      return true;
+    } catch (ExpiredJwtException expiredJwtException) {
+      System.out.println("Token expired: invalid");
+    } catch (SignatureException signatureException) {
+      System.out.println("Token signature: invalid");
+    } catch (Exception e) {
+      System.out.println("Token invalid");
+    }
+    return false;
+  }
+
+
   public static void main(String[] args) {
     JwtUtil jwtUtil = new JwtUtil();
-    System.out.println(jwtUtil.extractToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6IkpvaG4gRG9lIiwicm9sZSI6IkFETUlOIn0.QOd54qI2lZyVbhgj7cLsBp98Sgw5OfYyVOpJ-t2LZQM").get("role"));
+    System.out.println(jwtUtil.extractToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6IkpvaG4gRG9lIiwicm9sZSI6IkFETUlOIn0.QOd54qI2lZyVbhgj7cLsBp98Sgw5OfYyVOpJ-t2LZQM"));
   }
 }

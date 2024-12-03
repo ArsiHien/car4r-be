@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 @Builder
@@ -15,32 +15,29 @@ import java.util.Date;
 public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String bookingId;
+    String id;
 
     @ManyToOne
-    @JoinColumn(name = "customer_id", nullable = false)
-    private Customer customer;
+    Customer customer;
+
     @ManyToOne
-    @JoinColumn(name = "car_category_id", nullable = false)
-    private CarCategory carCategory;
-    private Date startDate;
-    private Date returnDate;
-    private String loanPlace;
-    private String returnPlace;
-    private Long totalPrice;
+    CarCategory carCategory;
 
-    public void setBookingId(String bookingId) {
-        this.bookingId = bookingId;
+    @OneToOne(mappedBy = "booking")
+    Payment payment;
+
+    @ManyToOne
+    Car assignedCar;
+
+    LocalDate bookingDate;
+    LocalDate startDate;
+    LocalDate returnDate;
+    String loanPlace;
+    String returnPlace;
+    Long totalPrice;
+    BookingStatus status;
+
+    public enum BookingStatus {
+        IN_PROCESS, CANCELED, APPROVED, COMPLETED,
     }
-
-    public String getBookingId() {
-        return bookingId;
-    }
-
-
-    //    @Enumerated(EnumType.STRING)
-    private enum BookingStatus  {
-        inProcess,canceled,approved,completed,
-    }
-
 }

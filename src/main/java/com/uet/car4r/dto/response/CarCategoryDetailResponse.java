@@ -1,6 +1,5 @@
 package com.uet.car4r.dto.response;
 
-import com.uet.car4r.entity.CarCategory;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -17,7 +16,7 @@ public class CarCategoryDetailResponse {
     String type;
     String description;
     int numberOfPerson;
-    CarCategory.Steering steering;
+    String steering;
     int gasoline;
     int price;
     int promotionPrice;

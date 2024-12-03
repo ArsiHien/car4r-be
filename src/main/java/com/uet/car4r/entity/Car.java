@@ -19,7 +19,7 @@ public class Car {
     CarCategory category;
 
     String licensePlate;
-    CarStatus status;
+    CarStatus status = CarStatus.AVAILABLE;
 
     public enum CarStatus {
         AVAILABLE, RENTED, MAINTENANCE

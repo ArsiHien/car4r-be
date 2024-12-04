@@ -22,4 +22,5 @@ public class BookingResponse {
     String loanPlace;
     String returnPlace;
     Long totalPrice;
+    String status;
 }

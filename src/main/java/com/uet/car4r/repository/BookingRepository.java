@@ -12,21 +12,25 @@ import java.util.Optional;
 
 @Repository
 public interface BookingRepository extends JpaRepository<Booking, String> {
+
     @Query("""
-                SELECT b.id AS id,
-                       b.customer.firstName || ' ' || b.customer.lastName AS customerName,
-                       b.carCategory.name AS carCategoryName,
-                       c.licensePlate AS carLicensePlate,
-                       b.bookingDate AS bookingDate,
-                       b.startDate AS startDate,
-                       b.returnDate AS returnDate,
-                       b.loanPlace AS loanPlace,
-                       b.returnPlace AS returnPlace,
-                       b.totalPrice AS totalPrice
-                FROM Booking b
-                LEFT JOIN Car c ON c.category = b.carCategory
-                WHERE b.id = :bookingId
-            """)
+            SELECT b.id AS id,
+                   CONCAT(c.firstName, ' ', c.lastName) AS customerName,
+                   cc.name AS carCategoryName,
+                   car.licensePlate AS carLicensePlate,
+                   b.bookingDate AS bookingDate,
+                   b.startDate AS startDate,
+                   b.returnDate AS returnDate,
+                   b.loanPlace AS loanPlace,
+                   b.returnPlace AS returnPlace,
+                   b.totalPrice AS totalPrice,
+                   b.status AS status
+            FROM Booking b
+                 LEFT JOIN b.customer c
+                 LEFT JOIN b.carCategory cc
+                 LEFT JOIN Car car ON car.id = b.assignedCar.id
+            WHERE b.id = :bookingId
+           """)
     Optional<BookingProjection> findBookingProjectionById(@Param("bookingId") String bookingId);
 
     @Query("""
@@ -39,13 +43,13 @@ public interface BookingRepository extends JpaRepository<Booking, String> {
                    b.returnDate AS returnDate,
                    b.loanPlace AS loanPlace,
                    b.returnPlace AS returnPlace,
-                   b.totalPrice AS totalPrice
+                   b.totalPrice AS totalPrice,
+                   b.status AS status
             FROM Booking b
                  LEFT JOIN b.customer c
                  LEFT JOIN b.carCategory cc
-                 LEFT JOIN Car car ON car.category = cc
-            """)
+                 LEFT JOIN Car car ON car.id = b.assignedCar.id
+           """)
     List<BookingProjection> findAllBookings();
-
-
 }
+

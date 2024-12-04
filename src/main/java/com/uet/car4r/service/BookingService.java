@@ -89,7 +89,6 @@ public class BookingService {
 
         booking.setStatus(validateStatus(status));
         bookingRepository.save(booking);
-
         return bookingMapper.toBookingResponse(booking);
     }
 

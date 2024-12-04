@@ -13,7 +13,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ImageUploadService {
 
-    private final Cloudinary cloudinary;
+    private Cloudinary cloudinary;
 
     public String uploadImage(MultipartFile image) throws IOException {
         try {

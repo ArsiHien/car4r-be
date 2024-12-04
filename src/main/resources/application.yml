@@ -23,3 +23,12 @@ logging:
     org:
       springframework:
         web: info
+
+payment:
+  vnPay:
+    url: ${PAY_URL}
+    tmnCode: ${TMN_CODE}
+    secrectKey: ${SECRET_KEY}
+    version: ${VERSION}
+    command: ${COMANND}
+    orderType: ${ORDER_TYPE}

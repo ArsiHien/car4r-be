@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 public interface BookingProjection {
     String getId();
+
     String getCustomerName();
 
     String getCarCategoryName();
@@ -21,4 +22,6 @@ public interface BookingProjection {
     String getReturnPlace();
 
     Long getTotalPrice();
+
+    String getStatus();
 }

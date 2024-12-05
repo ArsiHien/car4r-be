@@ -21,3 +21,17 @@ logging:
     org:
       springframework:
         web: info
+
+  # config mail
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: hieuhoctap2004@gmail.com
+    password: skgb robb lkva upam
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true

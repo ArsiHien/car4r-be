@@ -1,5 +1,6 @@
 package com.uet.car4r.dto;
 
+import com.uet.car4r.constant.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,5 +22,6 @@ public class UserDTO {
   private String lastName;
   private String userName;
   private String phone;
+  private Role role;
   private String avatar;
 }

@@ -3,22 +3,28 @@ package com.uet.car4r.service;
 import com.uet.car4r.constant.TypeMessage;
 import com.uet.car4r.dto.NotificationDTO;
 import com.uet.car4r.dto.UserDTO;
+import com.uet.car4r.entity.User;
+import com.uet.car4r.mapper.UserMapper;
 import com.uet.car4r.repository.UserRepository;
 import com.uet.car4r.utils.JwtUtil;
 import java.io.IOException;
-import javax.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
 import com.uet.car4r.constant.TypeMessage;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UserService {
-  private UserRepository userRepository;
-  private EmailService emailService;
-  private JwtUtil jwtUtil;
+  private final UserRepository userRepository;
+  private final EmailService emailService;
+  private final JwtUtil jwtUtil;
+  private final BCryptPasswordEncoder bCryptPasswordEncoder;
+  private final UserMapper userMapper;
+  private UserDTO tempUserDto = new UserDTO();
 
   public void login(UserDTO userDTO) {
 
@@ -37,8 +43,10 @@ public class UserService {
       String token = jwtUtil.generateTokenValidateRegister();
       String url = "http://localhost:8080/api/v1/users/verify/" + token;
       emailService.sendEmailRegister(email, url);
+      tempUserDto = userDTO;
+
       return new NotificationDTO().builder()
-          .endpoint("/api/v1/users/register")
+          .endpoint("/api/v1/users/verify")
           .message(TypeMessage.SUCCESS)
           .messageDetail("Check Your Email")
           .build();
@@ -49,11 +57,16 @@ public class UserService {
     String email = userDTO.getEmail();
   }
 
-  public NotificationDTO verify(String token, HttpServletResponse response) {
+  public NotificationDTO verify(String token) {
     Boolean validate = jwtUtil.validateToken(token);
     if (validate) {
       try {
-        response.sendRedirect("/home");
+        String encodePw = bCryptPasswordEncoder.encode(tempUserDto.getPassword());
+        tempUserDto.setPassword(encodePw);
+        tempUserDto.
+        User user = userMapper.dtoToEntity(tempUserDto);
+        userRepository.save(user);
+
         return new NotificationDTO().builder()
             .endpoint("/api/v1/users/register")
             .message(TypeMessage.SUCCESS)
@@ -71,5 +84,7 @@ public class UserService {
           .build();
     }
   }
+
+
 
 }

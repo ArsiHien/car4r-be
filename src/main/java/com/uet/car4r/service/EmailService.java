@@ -5,6 +5,7 @@ import com.uet.car4r.constant.EmailMessage;
 import jakarta.mail.internet.MimeMessage;
 import java.util.Map;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -13,12 +14,13 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class EmailService {
-  private JavaMailSender javaMailSender;
-  private Environment environment;
+  private final JavaMailSender javaMailSender;
+  private final Environment environment;
 
   public void sendEmailRegister(String to, String urlRegister) {
+    System.out.println(javaMailSender);
     String username = to.split("@")[0];
     Map<String, String> mailRegister = EmailMessage.getMailRegister(username, urlRegister);
 

@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
 public class JwtUtil {
   private final Dotenv dotenv = Dotenv.load();
   private final String SECRETE_KEY = dotenv.get("SECRET_KEY");
-  private final long expirationTime = 1000 * 60 * 1;
+  private final long expirationTime = 1000 * 60 * 3;
 
   public String generateToken(UserDetails userDetails) {
     Map<String, Object> claims = new HashMap<>();
@@ -41,6 +41,7 @@ public class JwtUtil {
         .setSubject("CAR$R")
         .setIssuedAt(new Date(now))
         .setExpiration(new Date(now + expirationTime))
+        .signWith(SignatureAlgorithm.HS256, SECRETE_KEY)
         .compact();
   }
 
@@ -53,6 +54,7 @@ public class JwtUtil {
   }
 
   public Boolean validateToken(String token) {
+    System.out.println(dotenv);
     try {
       Claims claims = extractToken(token);
       if (claims.getExpiration().before(new Date()) || !claims.getSubject().equals("CAR$R")) {
@@ -72,6 +74,6 @@ public class JwtUtil {
 
   public static void main(String[] args) {
     JwtUtil jwtUtil = new JwtUtil();
-    System.out.println(jwtUtil.extractToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6IkpvaG4gRG9lIiwicm9sZSI6IkFETUlOIn0.QOd54qI2lZyVbhgj7cLsBp98Sgw5OfYyVOpJ-t2LZQM"));
+    System.out.println(jwtUtil.extractToken("eyJhbGciOiJub25lIn0.eyJzdWIiOiJDQVIkUiIsImlhdCI6MTczMzMxNDc4MCwiZXhwIjoxNzMzMzE0OTYwfQ."));
   }
 }

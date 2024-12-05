@@ -1,18 +1,16 @@
 package com.uet.car4r.config.payment;
-import com.uet.car4r.Utils.VNPayUtil;
-import jakarta.servlet.http.HttpServletRequest;
+
+import com.uet.car4r.utils.VNPayUtil;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TimeZone;
+
 @Configuration
 public class VNPAYConfig {
     @Getter
@@ -21,7 +19,7 @@ public class VNPAYConfig {
     @Value("http://localhost:8080/api/payment/vn-pay-callback")
     private String vnp_ReturnUrl;
     @Value("WSELW8OI")
-    private String vnp_TmnCode ;
+    private String vnp_TmnCode;
     @Getter
     @Value("1H2SL5GMG3DS3KB7NQ55EY4E5DMGJXHF")
     private String secretKey;
@@ -38,8 +36,8 @@ public class VNPAYConfig {
         vnpParamsMap.put("vnp_Command", this.vnp_Command);
         vnpParamsMap.put("vnp_TmnCode", this.vnp_TmnCode);
         vnpParamsMap.put("vnp_CurrCode", "VND");
-        vnpParamsMap.put("vnp_TxnRef",  VNPayUtil.getRandomNumber(8));
-        vnpParamsMap.put("vnp_OrderInfo", "Thanh toan don hang:" +  VNPayUtil.getRandomNumber(8));
+        vnpParamsMap.put("vnp_TxnRef", VNPayUtil.getRandomNumber(8));
+        vnpParamsMap.put("vnp_OrderInfo", "Thanh toan don hang:" + VNPayUtil.getRandomNumber(8));
         vnpParamsMap.put("vnp_OrderType", this.orderType);
         vnpParamsMap.put("vnp_Locale", "vn");
         vnpParamsMap.put("vnp_ReturnUrl", this.vnp_ReturnUrl);

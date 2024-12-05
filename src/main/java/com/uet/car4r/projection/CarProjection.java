@@ -5,5 +5,11 @@ public interface CarProjection {
 
     String getLicensePlate();
 
+    String getCategoryName();
+
+    String getCategoryType();
+
+    String getMainImage();
+
     String getStatus();
 }

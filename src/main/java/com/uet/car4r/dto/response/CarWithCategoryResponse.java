@@ -10,7 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CarResponse {
+public class CarWithCategoryResponse {
     String categoryId;
     int numberOfCar;
     List<CarDetailResponse> cars;

@@ -1,14 +1,19 @@
 package com.uet.car4r.service;
 
+import com.uet.car4r.constant.AppConstants;
 import com.uet.car4r.dto.request.CarRequest;
 import com.uet.car4r.dto.response.CarDetailResponse;
-import com.uet.car4r.dto.response.CarResponse;
+import com.uet.car4r.dto.response.CarWithCategoryResponse;
+import com.uet.car4r.dto.response.CarWithStatusResponse;
 import com.uet.car4r.entity.Car;
 import com.uet.car4r.entity.CarCategory;
+import com.uet.car4r.entity.CarGpsLog;
 import com.uet.car4r.mapper.CarMapper;
 import com.uet.car4r.projection.CarProjection;
-import com.uet.car4r.projection.CarWithCountProjection;
+import com.uet.car4r.projection.CarWithCategoryProjection;
+import com.uet.car4r.projection.CarWithStatusProjection;
 import com.uet.car4r.repository.CarCategoryRepository;
+import com.uet.car4r.repository.CarGpsLogRepository;
 import com.uet.car4r.repository.CarRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -25,12 +30,13 @@ import java.util.stream.Collectors;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CarService {
     CarRepository carRepository;
-    CarMapper carMapper;
+    CarGpsLogRepository carGpsLogRepository;
     CarCategoryRepository carCategoryRepository;
+    CarMapper carMapper;
 
-    public CarResponse getCarByCarCategory(String carCategoryId) {
-        CarWithCountProjection countProjection = carRepository.findCarWithCountByCategoryId(carCategoryId);
-        if (countProjection == null) {
+    public CarWithCategoryResponse getCarByCarCategory(String carCategoryId) {
+        CarWithCategoryProjection projection = carRepository.findCarWithCountByCategoryId(carCategoryId);
+        if (projection == null) {
             throw new EntityNotFoundException("No cars found for the specified category");
         }
 
@@ -39,9 +45,26 @@ public class CarService {
                 .map(carMapper::toCarDetailResponse)
                 .collect(Collectors.toList());
 
-        CarResponse response = new CarResponse();
-        response.setCategoryId(countProjection.getCategoryId());
-        response.setNumberOfCar(countProjection.getNumberOfCar());
+        CarWithCategoryResponse response = new CarWithCategoryResponse();
+        response.setCategoryId(projection.getCategoryId());
+        response.setNumberOfCar(projection.getNumberOfCar());
+        response.setCars(carDetails);
+
+        return response;
+    }
+
+    public CarWithStatusResponse getCarByStatus(String status) {
+        Car.CarStatus carStatus = Car.CarStatus.valueOf(status.toUpperCase());
+        CarWithStatusProjection statusProjection = carRepository.findCarStatusCount(carStatus);
+
+        List<CarProjection> cars = carRepository.findCarsByStatus(carStatus);
+        List<CarDetailResponse> carDetails = cars.stream()
+                .map(carMapper::toCarDetailResponse)
+                        .toList();
+
+        CarWithStatusResponse response = new CarWithStatusResponse();
+        response.setStatus(statusProjection.getStatus());
+        response.setNumberOfCar(statusProjection.getNumberOfCar());
         response.setCars(carDetails);
 
         return response;
@@ -82,4 +105,12 @@ public class CarService {
         }
         carRepository.deleteById(id);
     }
+
+    public List<CarGpsLog> getRouteForCar(String carId) {
+        int fileIndex = Math.abs(carId.hashCode() % AppConstants.NUMBER_OF_ROUTE_FILES) + 1;
+        String mappedCarId = String.valueOf(fileIndex);
+
+        return carGpsLogRepository.findAllByCarIdOrderBySequenceOrder(mappedCarId);
+    }
+
 }

@@ -58,4 +58,7 @@ public interface CarCategoryRepository extends JpaRepository<CarCategory, String
             "END AS groupKey, COUNT(c.id) AS count " +
             "FROM CarCategory c GROUP BY groupKey")
     List<CarCategoryCountProjection> countCarCategoryByNumberOfPerson();
+
+    @Query("SELECT DISTINCT c.type FROM CarCategory c")
+    List<String> findAllCarCategoryTypes();
 }

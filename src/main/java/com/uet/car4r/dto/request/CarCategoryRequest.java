@@ -11,7 +11,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CarCategoryUpdateRequest {
+public class CarCategoryRequest {
     String name;
     String type;
     String description;

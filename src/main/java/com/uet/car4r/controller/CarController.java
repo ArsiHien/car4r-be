@@ -1,45 +1,46 @@
 package com.uet.car4r.controller;
 
-import java.util.Map;
+import com.uet.car4r.dto.request.CarRequest;
+import com.uet.car4r.dto.response.CarDetailResponse;
+import com.uet.car4r.dto.response.CarResponse;
+import com.uet.car4r.service.CarService;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * CarController
  */
 @RestController
-@RequestMapping(path = "/api/v1/cars")
+@RequestMapping(path = "/cars")
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CarController {
-  @GetMapping(path = "/{id}")
-  public ResponseEntity getCarById(@PathVariable Long id) {
-    return null;
-  }
+    CarService carService;
 
-  @GetMapping
-  public ResponseEntity getCarByFilterAndPaging(@RequestParam Map<String, Object> params) {
-    return null;
-  }
+    @GetMapping(path = "/{carCategoryId}")
+    public ResponseEntity<CarResponse> getCarByCarCategory(@PathVariable String carCategoryId) {
+        return ResponseEntity.ok(carService.getCarByCarCategory(carCategoryId));
+    }
 
-  @PostMapping
-  public ResponseEntity addCar(@RequestBody String temp) {
-    return null;
-  }
+    @PostMapping
+    public ResponseEntity<CarDetailResponse> createCar(@RequestBody CarRequest carRequest) {
+        CarDetailResponse carResponse = carService.createCar(carRequest);
+        return new ResponseEntity<>(carResponse, HttpStatus.CREATED);
+    }
 
-  @PutMapping
-  public ResponseEntity updateCar(@PathVariable Long id, @RequestBody String temp) {
-    return null;
-  }
+    @PutMapping("/{id}")
+    public ResponseEntity<CarDetailResponse> updateCar(@PathVariable String id, @RequestBody CarRequest carRequest) {
+        CarDetailResponse carResponse = carService.updateCar(id, carRequest);
+        return ResponseEntity.ok(carResponse);
+    }
 
-  @DeleteMapping
-  public ResponseEntity delCar(@PathVariable Long id) {
-    return null;
-  }
+    @DeleteMapping("/{id}")
+    public String deleteCar(@PathVariable String id) {
+        carService.deleteCar(id);
+        return "Car has been deleted";
+    }
 }

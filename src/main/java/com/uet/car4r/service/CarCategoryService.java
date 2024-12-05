@@ -1,7 +1,6 @@
 package com.uet.car4r.service;
 
-import com.uet.car4r.dto.request.CarCategoryCreationRequest;
-import com.uet.car4r.dto.request.CarCategoryUpdateRequest;
+import com.uet.car4r.dto.request.CarCategoryRequest;
 import com.uet.car4r.dto.response.*;
 import com.uet.car4r.entity.Amenity;
 import com.uet.car4r.entity.CarCategory;
@@ -64,7 +63,7 @@ public class CarCategoryService {
         return buildCarCategoryDetailResponse(projection);
     }
 
-    public CarCategoryDetailResponse createCarCategory(CarCategoryCreationRequest request) {
+    public CarCategoryDetailResponse createCarCategory(CarCategoryRequest request) {
         String mainImageUrl = uploadMainImage(request.getMainImage());
         CarCategory carCategory = carCategoryMapper.toCarCategory(request);
         carCategory.setMainImage(mainImageUrl);
@@ -79,7 +78,7 @@ public class CarCategoryService {
     }
 
     @Transactional
-    public CarCategoryDetailResponse updateCarCategory(String carCategoryId, CarCategoryUpdateRequest request) {
+    public CarCategoryDetailResponse updateCarCategory(String carCategoryId, CarCategoryRequest request) {
         CarCategory carCategory = carCategoryRepository.findById(carCategoryId)
                 .orElseThrow(() -> new RuntimeException("Car category not found"));
         carCategoryMapper.updateCarCategory(carCategory, request);
@@ -112,6 +111,10 @@ public class CarCategoryService {
     public List<CarCategoryCountResponse> getCarCategoryCountByNumberOfPerson() {
         return carCategoryRepository.countCarCategoryByNumberOfPerson().stream()
                 .map(carCategoryMapper::toCarCategoryCountResponse).toList();
+    }
+
+    public List<String> getCarCategoryTypes() {
+        return carCategoryRepository.findAllCarCategoryTypes();
     }
 
     private String uploadMainImage(MultipartFile mainImage) {
@@ -191,5 +194,4 @@ public class CarCategoryService {
                 .map(reviewMapper::toReviewResponse)
                 .collect(Collectors.toSet());
     }
-
 }

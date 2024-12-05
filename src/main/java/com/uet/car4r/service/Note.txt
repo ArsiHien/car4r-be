@@ -1,1 +1,0 @@
-@RequireArgsContructor -> tao contructor att final

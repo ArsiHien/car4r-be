@@ -15,6 +15,8 @@ spring:
 
 server:
   port: 8080
+  servlet:
+    context-path: /api
 
 logging:
   level:
@@ -23,15 +25,24 @@ logging:
         web: info
 
   # config mail
-  mail:
-    host: smtp.gmail.com
-    port: 587
-    username: hieuhoctap2004@gmail.com
-    password: skgb robb lkva upam
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
-            required: true
+mail:
+  host: smtp.gmail.com
+  port: 587
+  username: hieuhoctap2004@gmail.com
+  password: skgb robb lkva upam
+  properties:
+    mail:
+      smtp:
+        auth: true
+        starttls:
+          enable: true
+          required: true
+
+payment:
+  vnPay:
+    url: ${PAY_URL}
+    tmnCode: ${TMN_CODE}
+    secrectKey: ${SECRET_KEY}
+    version: ${VERSION}
+    command: ${COMANND}
+    orderType: ${ORDER_TYPE}

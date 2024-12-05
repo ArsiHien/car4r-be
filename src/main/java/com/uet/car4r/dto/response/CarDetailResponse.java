@@ -8,14 +8,8 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CarCategoryBasicResponse {
+public class CarDetailResponse {
     String id;
-    String name;
-    String type;
-    int numberOfPerson;
-    String steering;
-    int gasoline;
-    int price;
-    int promotionPrice;
-    String mainImage;
+    String licensePlate;
+    String status;
 }

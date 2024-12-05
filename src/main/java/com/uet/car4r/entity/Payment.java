@@ -4,22 +4,25 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.Set;
+import java.time.LocalDate;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@ToString(exclude = "carCategories")
 @Entity
-public class Amenity {
+public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
 
-    String name;
+    @OneToOne(cascade = CascadeType.ALL)
+    Booking booking;
+    LocalDate paymentDate;
+    Long amount;
 
-    @ManyToMany(mappedBy = "amenities", cascade = CascadeType.ALL)
-    Set<CarCategory> carCategories;
+    public enum PaymentMethod {
+        CASH,
+    }
 }

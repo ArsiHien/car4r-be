@@ -1,5 +1,7 @@
 package com.uet.car4r.projection;
 
+import java.time.LocalDate;
+
 public interface CarProjection {
     String getId();
 
@@ -12,4 +14,14 @@ public interface CarProjection {
     String getMainImage();
 
     String getStatus();
+
+    LocalDate getCurrentBookingStartDate();
+
+    LocalDate getCurrentBookingReturnDate();
+
+    String getCurrentBookingLoanPlace();
+
+    String getCurrentBookingReturnPlace();
+
+    Long getCurrentBookingTotalPrice();
 }

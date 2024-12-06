@@ -3,6 +3,8 @@ package com.uet.car4r.dto.response;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDate;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -15,4 +17,9 @@ public class CarDetailResponse {
     String categoryType;
     String mainImage;
     String status;
+    LocalDate currentBookingStartDate;
+    LocalDate currentBookingReturnDate;
+    String currentBookingLoanPlace;
+    String currentBookingReturnPlace;
+    Long currentBookingTotalPrice;
 }

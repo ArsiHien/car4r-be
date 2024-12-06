@@ -51,6 +51,25 @@ public interface CarRepository extends JpaRepository<Car, String> {
     List<CarProjection> findCarsByStatus(@Param("carStatus") Car.CarStatus carStatus);
 
     @Query("""
+            SELECT c.id AS id,
+                   c.licensePlate AS licensePlate,
+                   cc.name AS categoryName,
+                   cc.type AS categoryType,
+                   cc.mainImage AS mainImage,
+                   c.status AS status,
+                   b.startDate AS currentBookingStartDate,
+                   b.returnDate AS currentBookingReturnDate,
+                   b.loanPlace AS currentBookingLoanPlace,
+                   b.returnPlace AS currentBookingReturnPlace,
+                   b.totalPrice AS currentBookingTotalPrice
+            FROM Car c
+            LEFT JOIN c.category cc
+            LEFT JOIN c.booking b ON b.status = com.uet.car4r.entity.Booking.BookingStatus.APPROVED
+            WHERE c.status = :carStatus
+           """)
+    List<CarProjection> findCarsCurrentlyRented(@Param("carStatus") Car.CarStatus carStatus);
+
+    @Query("""
              SELECT c.status AS status,
                     COUNT(c) AS numberOfCar
              FROM Car c

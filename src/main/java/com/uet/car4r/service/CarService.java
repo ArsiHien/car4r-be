@@ -57,10 +57,15 @@ public class CarService {
         Car.CarStatus carStatus = Car.CarStatus.valueOf(status.toUpperCase());
         CarWithStatusProjection statusProjection = carRepository.findCarStatusCount(carStatus);
 
-        List<CarProjection> cars = carRepository.findCarsByStatus(carStatus);
+        List<CarProjection> cars;
+        if (carStatus == Car.CarStatus.RENTED)
+            cars = carRepository.findCarsCurrentlyRented(carStatus);
+        else
+            cars = carRepository.findCarsByStatus(carStatus);
+
         List<CarDetailResponse> carDetails = cars.stream()
                 .map(carMapper::toCarDetailResponse)
-                        .toList();
+                .toList();
 
         CarWithStatusResponse response = new CarWithStatusResponse();
         response.setStatus(statusProjection.getStatus());

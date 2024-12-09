@@ -22,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -58,11 +59,12 @@ public class CarService {
         CarWithStatusProjection statusProjection = carRepository.findCarStatusCount(carStatus);
 
         List<CarProjection> cars;
-        if (carStatus == Car.CarStatus.RENTED)
+        if (carStatus == Car.CarStatus.RENTED) {
             cars = carRepository.findCarsCurrentlyRented(carStatus);
-        else
+        }
+        else {
             cars = carRepository.findCarsByStatus(carStatus);
-
+        }
         List<CarDetailResponse> carDetails = cars.stream()
                 .map(carMapper::toCarDetailResponse)
                 .toList();
@@ -81,6 +83,7 @@ public class CarService {
                 .findById(carRequest.getCategoryId())
                 .orElseThrow(() -> new EntityNotFoundException("Car category not found"));
         car.setCategory(category);
+        car.setStatus(Car.CarStatus.AVAILABLE);
         Car savedCar = carRepository.save(car);
         return carMapper.toCarDetailResponse(savedCar);
     }

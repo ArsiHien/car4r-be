@@ -24,4 +24,5 @@ public interface CarProjection {
     String getCurrentBookingReturnPlace();
 
     Long getCurrentBookingTotalPrice();
+
 }

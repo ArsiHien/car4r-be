@@ -11,6 +11,5 @@ import lombok.experimental.FieldDefaults;
 public class CarRequest {
     private String categoryId;
     private String licensePlate;
-    private String status;
 }
 

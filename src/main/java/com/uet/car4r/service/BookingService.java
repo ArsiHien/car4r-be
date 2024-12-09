@@ -55,6 +55,7 @@ public class BookingService {
         Booking booking = bookingMapper.toBooking(request);
         booking.setCustomer(customer);
         booking.setCarCategory(carCategory);
+        booking.setStatus(Booking.BookingStatus.IN_PROCESS);
         Booking savedBooking = bookingRepository.save(booking);
         BookingProjection projection = bookingRepository.findBookingProjectionById(savedBooking.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Booking not saved"));
@@ -77,6 +78,7 @@ public class BookingService {
 
         booking.setAssignedCar(car);
         booking.setStatus(Booking.BookingStatus.APPROVED);
+        car.setStatus(Car.CarStatus.RENTED);
         bookingRepository.save(booking);
 
         return bookingMapper.toBookingResponse(booking);

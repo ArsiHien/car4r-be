@@ -3,6 +3,7 @@ package com.uet.car4r.repository;
 import com.uet.car4r.entity.CarCategory;
 import com.uet.car4r.projection.BasicCarCategoryProjection;
 import com.uet.car4r.projection.CarCategoryCountProjection;
+import com.uet.car4r.projection.CarCategoryRentalStatisticsProjection;
 import com.uet.car4r.projection.DetailCarCategoryProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -61,4 +62,57 @@ public interface CarCategoryRepository extends JpaRepository<CarCategory, String
 
     @Query("SELECT DISTINCT c.type FROM CarCategory c")
     List<String> findAllCarCategoryTypes();
+
+    @Query("""
+            SELECT cc.id AS id, cc.name AS name, cc.type AS type, cc.numberOfPerson AS numberOfPerson,
+                   cc.steering AS steering, cc.gasoline AS gasoline, cc.price AS price, cc.promotionPrice AS promotionPrice,
+                   cc.mainImage AS mainImage, COUNT(b) AS bookingCount, SUM(b.totalPrice) AS totalRevenue,
+                   ROUND(COALESCE(AVG(r.rating), 0) * 2) / 2 AS averageRating
+            FROM CarCategory cc
+            LEFT JOIN cc.cars c
+            LEFT JOIN c.booking b
+            LEFT JOIN cc.reviews r
+            WHERE b.status = com.uet.car4r.entity.Booking.BookingStatus.APPROVED
+            GROUP BY cc.id, cc.name, cc.type, cc.numberOfPerson, cc.steering,
+                     cc.gasoline, cc.price, cc.promotionPrice, cc.mainImage
+            ORDER BY COUNT(b) DESC
+            LIMIT 5
+            """)
+    List<CarCategoryRentalStatisticsProjection> findMostRentedCarCategories();
+
+    @Query("""
+            SELECT cc.id AS id, cc.name AS name, cc.type AS type, cc.numberOfPerson AS numberOfPerson,
+                   cc.steering AS steering, cc.gasoline AS gasoline, cc.price AS price, cc.promotionPrice AS promotionPrice,
+                   cc.mainImage AS mainImage, COUNT(b) AS bookingCount, SUM(b.totalPrice) AS totalRevenue,
+                   ROUND(COALESCE(AVG(r.rating), 0) * 2) / 2 AS averageRating
+            FROM CarCategory cc
+            LEFT JOIN cc.cars c
+            LEFT JOIN c.booking b
+            LEFT JOIN cc.reviews r
+            WHERE b.status = com.uet.car4r.entity.Booking.BookingStatus.APPROVED
+            GROUP BY cc.id, cc.name, cc.type, cc.numberOfPerson, cc.steering,
+                     cc.gasoline, cc.price, cc.promotionPrice, cc.mainImage
+            ORDER BY COUNT(b) ASC
+            LIMIT 5
+            """)
+    List<CarCategoryRentalStatisticsProjection> findLeastRentedCarCategories();
+
+    @Query("""
+            SELECT cc.id AS id, cc.name AS name, cc.type AS type, cc.numberOfPerson AS numberOfPerson,
+                   cc.steering AS steering, cc.gasoline AS gasoline, cc.price AS price, cc.promotionPrice AS promotionPrice,
+                   cc.mainImage AS mainImage, COUNT(b) AS bookingCount, SUM(b.totalPrice) AS totalRevenue,
+                   ROUND(COALESCE(AVG(r.rating), 0) * 2) / 2 AS averageRating
+            FROM CarCategory cc
+            LEFT JOIN cc.cars c
+            LEFT JOIN c.booking b
+            LEFT JOIN cc.reviews r
+            WHERE b.status = com.uet.car4r.entity.Booking.BookingStatus.APPROVED
+            GROUP BY cc.id, cc.name, cc.type, cc.numberOfPerson, cc.steering,
+                     cc.gasoline, cc.price, cc.promotionPrice, cc.mainImage
+            ORDER BY SUM(b.totalPrice) DESC
+            LIMIT 5
+            """)
+    List<CarCategoryRentalStatisticsProjection> findBestPerformingCategories();
+
+
 }

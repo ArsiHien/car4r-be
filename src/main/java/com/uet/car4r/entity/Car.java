@@ -23,6 +23,7 @@ public class Car {
     @OneToMany(mappedBy = "assignedCar", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     Set<Booking> booking;
 
+    @Column(unique = true)
     String licensePlate;
     CarStatus status = CarStatus.AVAILABLE;
 

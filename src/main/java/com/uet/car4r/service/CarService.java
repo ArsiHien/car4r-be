@@ -82,6 +82,9 @@ public class CarService {
         CarCategory category = carCategoryRepository
                 .findById(carRequest.getCategoryId())
                 .orElseThrow(() -> new EntityNotFoundException("Car category not found"));
+        if (carRepository.existsByLicensePlate(car.getLicensePlate())) {
+            throw new IllegalArgumentException("A car with this license plate already exists.");
+        }
         car.setCategory(category);
         car.setStatus(Car.CarStatus.AVAILABLE);
         Car savedCar = carRepository.save(car);

@@ -77,4 +77,6 @@ public interface CarRepository extends JpaRepository<Car, String> {
              GROUP BY c.status
             """)
     CarWithStatusProjection findCarStatusCount(@Param("carStatus") Car.CarStatus carStatus);
+
+    boolean existsByLicensePlate(String licensePlate);
 }

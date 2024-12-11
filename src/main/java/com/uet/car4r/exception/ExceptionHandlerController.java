@@ -2,8 +2,7 @@ package com.uet.car4r.exception;
 
 import com.uet.car4r.constant.TypeMessage;
 import com.uet.car4r.dto.NotificationDTO;
-import javax.servlet.http.HttpServletRequest;
-import org.springframework.http.HttpRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;

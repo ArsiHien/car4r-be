@@ -53,4 +53,29 @@ public class EmailMessage {
 
     return res;
   }
+
+  public static Map<String, String> getMailOauthLogin(String password) {
+    Map<String, String> res = new HashMap<>();
+
+    String content = "<html><body>" +
+        "<h1 style='color: #333;'>Welcome to CAR4R!</h1>" +
+        "<p>Dear User,</p>" +
+        "<p>We noticed that you logged in to CAR4R using your OAuth account.</p>" +
+        "<p>For your convenience, we have generated a password for your account:</p>" +
+        "<p style='text-align: center;'>" +
+        "<strong style='font-size: 18px; color: #007bff;'>" + password + "</strong></p>" +
+        "<p>You can use this password to log in directly to CAR4R without OAuth in the future. We recommend changing this password after logging in to ensure your security.</p>" +
+        "<p>If you did not log in or suspect any unauthorized activity, please contact us immediately at <strong>" + EMAILSUPPORT + "</strong>.</p>" +
+        "<p>If you have any questions or need assistance, feel free to reach out to us at <strong>" + EMAILSUPPORT + "</strong> or call us at <strong>" + PHONESUPPORT + "</strong>.</p>" +
+        "<br>" +
+        "<p>Thank you for choosing CAR4R!</p>" +
+        "<p>Best regards,</p>" +
+        "<p>The CAR4R Team</p>" +
+        "</body></html>";
+
+    res.put("subject", "Your OAuth Login Details for CAR4R");
+    res.put("content", content);
+
+    return res;
+  }
 }

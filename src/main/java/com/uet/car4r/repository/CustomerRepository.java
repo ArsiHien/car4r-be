@@ -2,6 +2,7 @@ package com.uet.car4r.repository;
 
 import com.uet.car4r.entity.Customer;
 import com.uet.car4r.projection.TopCustomerProjection;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -22,5 +23,9 @@ public interface CustomerRepository extends JpaRepository<Customer, String> {
             LIMIT 5
             """)
     List<TopCustomerProjection> findTopCustomersByBookingFrequencyAndRevenue();
+
+    Optional getCustomersById(String id);
+
+    Object getCustomersByEmail(String email);
 }
 

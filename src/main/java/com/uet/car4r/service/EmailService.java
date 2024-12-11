@@ -65,4 +65,22 @@ public class EmailService {
       throw new CustomException("Send Email To Reset Password Error");
     }
   }
+
+  public void sendEmailOauthLogin(String to, String password) {
+    Map<String, String> mailResetPassword = EmailMessage.getMailOauthLogin(password);
+
+    try {
+      MimeMessage mimeMailMessage = javaMailSender.createMimeMessage();
+      MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMailMessage, true);
+
+      mimeMessageHelper.setFrom(environment.getProperty("spring.mail.username"));
+      mimeMessageHelper.setTo(to);
+      mimeMessageHelper.setSubject(mailResetPassword.get("subject"));
+      mimeMessageHelper.setText(mailResetPassword.get("content"), true);
+
+      javaMailSender.send(mimeMailMessage);
+    } catch (Exception e) {
+      throw new CustomException("Send Fail Email To Notifi Oauth Login");
+    }
+  }
 }

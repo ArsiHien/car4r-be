@@ -1,14 +1,19 @@
 package com.uet.car4r.service;
 
 import com.github.javafaker.Faker;
+import com.uet.car4r.constant.Role;
 import com.uet.car4r.constant.TypeMessage;
+import com.uet.car4r.dto.CustomerDTO;
 import com.uet.car4r.dto.NotificationDTO;
 import com.uet.car4r.dto.UserDTO;
+import com.uet.car4r.entity.Customer;
 import com.uet.car4r.entity.User;
 import com.uet.car4r.exception.CustomException;
 import com.uet.car4r.mapper.UserMapper;
+import com.uet.car4r.repository.CustomerRepository;
 import com.uet.car4r.repository.UserRepository;
 import com.uet.car4r.utils.JwtUtil;
+import jakarta.transaction.Transactional;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -35,6 +40,7 @@ public class UserService {
   private final Faker faker;
 
   private static final Logger logger = LoggerFactory.getLogger(UserService.class);
+  private final CustomerRepository customerRepository;
 
   private UserDTO tempUserDto = new UserDTO();
 
@@ -82,7 +88,7 @@ public class UserService {
           .messageDetail("User Already Exists")
           .build();
     } else {
-      String token = jwtUtil.generateVerifyToken() + "-" + email;
+      String token = jwtUtil.generateVerifyToken() + "----------" + email;
       tempUserDto = userDTO;
 
       boolean checkSendEmail = emailService.sendEmailRegister(email, token);
@@ -105,23 +111,32 @@ public class UserService {
    * @return Optional
    */
   public Optional verifyRegister(String token) {
-    String [] splitString = token.split("-");
+    String [] splitString = token.split("----------");
     String tokenVerify = splitString[0];
     String email = splitString[1];
 
-    Boolean validate = jwtUtil.validateVerifyToken(tokenVerify);
+    Boolean validate = tokenService.validateVerifyToken(tokenVerify);
 
-    if (validate || !userRepository.existsUsersByEmail(email)) {
+    if (validate) {
       try {
         String encodePw = bCryptPasswordEncoder.encode(tempUserDto.getPassword());
         tempUserDto.setPassword(encodePw);
 
-        // save user
         User user = userMapper.dtoToEntity(tempUserDto);
-        userRepository.save(user);
 
-        // result access, refresh token
-        Map<String, String> res = tokenService.getAccessAndRefreshToken(user);
+        // neu user la 1 customer
+        if (tempUserDto.getRole().equals(Role.CUSTOMER)) {
+          Customer customer = userMapper.userEntityToCustomerEntity(user);
+          customerRepository.save(customer);
+        } else {
+          userRepository.save(user);
+        }
+
+        // lay user da duoc save o csdl
+        User saveUser = userRepository.getAllByEmail(user.getEmail());
+
+        // tra ve access refresh token va luu
+        Map<String, String> res = tokenService.getAccessAndRefreshToken(saveUser);
 
         return Optional.of(res);
       } catch (Exception e) {
@@ -175,25 +190,24 @@ public class UserService {
     }
   }
 
-  /**
-   * ValidateAccessToken
-   * @param token: String
-   */
-  public void validateAccessToken(String token) {
-
-  }
-
-
-  public String refreshAccessToken(String refreshToken) {
-    return null;
-  }
-
   public Optional authWithGoogle(UserDTO userDTO) {
     String email = userDTO.getEmail();
     User user = userMapper.dtoToEntity(userDTO);
 
+    // lay user tu email
+
+
+    // neu da ton tai user -> tien hanh cap nhat 1 so truong theo email
     if (userRepository.existsUsersByEmail(email)) {
       User userExist = userRepository.getAllByEmail(email);
+
+      if (!userExist.getRole().equals(Role.CUSTOMER)) {
+        return Optional.of(NotificationDTO
+                               .builder()
+                               .message(TypeMessage.FAIL)
+                               .messageDetail("Authen With Google Fail. Try Again")
+                               .build());
+      }
 
       // update userexist
       userExist.setFirstName(userDTO.getFirstName());
@@ -202,17 +216,38 @@ public class UserService {
       userExist.setAvatar(userDTO.getAvatar());
 
       userRepository.saveAndFlush(userExist);
-    } else {
-      String password = bCryptPasswordEncoder.encode("CAR4R");
+    } else { // dang ky moi
+      String password = bCryptPasswordEncoder.encode("CAR4R@gmail.com");
       user.setPassword(password);
 
-      userRepository.saveAndFlush(user);
+      // luu xuong database customer user
+      Customer customer = userMapper.userEntityToCustomerEntity(user);
+      customerRepository.save(customer);
+
+      // GuiEmail
+      emailService.sendEmailOauthLogin(user.getEmail(), "CAR4R@gmail.com");
     }
 
     // access token refresh token
-    User refreshUser = userRepository.getAllByEmail(email);
+    User userSaved = userRepository.getAllByEmail(email);
 
-    Map<String, String> res = tokenService.handleLogin(refreshUser);
+    Map<String, String> res = tokenService.handleLogin(userSaved);
     return Optional.of(res);
   }
+
+
+  public Optional getUserById(String id) {
+    if (userRepository.existsById(id)) {
+      User user = userRepository.getUserById(id);
+
+      if (user.getRole().equals(Role.CUSTOMER)) {
+        return Optional.of(customerRepository.getCustomersById((id)));
+      }
+
+      return Optional.of(user);
+    } else {
+      return Optional.of(NotificationDTO.builder().build());
+    }
+  }
 }
+

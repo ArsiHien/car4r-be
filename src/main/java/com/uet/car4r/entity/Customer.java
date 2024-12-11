@@ -8,6 +8,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.util.Set;
+import lombok.experimental.SuperBuilder;
 
 
 @Data
@@ -15,6 +16,7 @@ import java.util.Set;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@SuperBuilder
 @Entity
 public class Customer extends User {
     String identityCardNo;

@@ -2,6 +2,8 @@ package com.uet.car4r.utils;
 
 import com.uet.car4r.constant.Role;
 import com.uet.car4r.dto.UserDTO;
+import com.uet.car4r.repository.CustomerRepository;
+import com.uet.car4r.repository.UserRepository;
 import io.github.cdimascio.dotenv.Dotenv;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -76,59 +78,6 @@ public class JwtUtil {
         .build()
         .parseClaimsJws(token)
         .getBody();
-  }
-
-  /**
-   * validate verify token
-   * @param token : String
-   * @return Boolean
-   */
-  public Boolean validateVerifyToken(String token) {
-    try {
-      Claims claims = extractToken(token);
-      if (claims.getExpiration().before(new Date()) || !extractToken(token).getSubject().equals("CAR$R")) {
-        return false;
-      }
-      return true;
-    } catch (ExpiredJwtException expiredJwtException) {
-      System.out.println("Token expired: invalid");
-    } catch (SignatureException signatureException) {
-      System.out.println("Token signature: invalid");
-    } catch (Exception e) {
-      System.out.println("Token invalid");
-    }
-    return false;
-  }
-
-  /**
-   * validate access token
-   * @param token: String
-   * @return Optional
-   */
-  public Optional validateAccessToken(String token) {
-    try {
-      Claims claims = extractToken(token);
-
-      if (claims.getExpiration().before(new Date())) {
-        return Optional.of(false);
-      }
-      String email = claims.get("email", String.class);
-      Role role = claims.get("role", Role.class);
-
-      UserDTO userDTO = UserDTO
-          .builder()
-          .email(email)
-          .role(role)
-          .build();
-      return Optional.of(userDTO);
-    } catch (ExpiredJwtException expiredJwtException) {
-      System.out.println("Token expired: invalid");
-    } catch (SignatureException signatureException) {
-      System.out.println("Token signature: invalid");
-    } catch (Exception e) {
-      System.out.println("Token invalid");
-    }
-    return Optional.of(false);
   }
 
   public static void main(String[] args) {

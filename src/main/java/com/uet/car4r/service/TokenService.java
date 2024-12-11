@@ -1,5 +1,6 @@
 package com.uet.car4r.service;
 
+import com.uet.car4r.constant.Role;
 import com.uet.car4r.constant.TokenType;
 import com.uet.car4r.constant.TypeMessage;
 import com.uet.car4r.dto.NotificationDTO;
@@ -7,9 +8,13 @@ import com.uet.car4r.entity.Token;
 import com.uet.car4r.entity.User;
 import com.uet.car4r.exception.CustomException;
 import com.uet.car4r.mapper.UserMapper;
+import com.uet.car4r.repository.CustomerRepository;
 import com.uet.car4r.repository.TokenRepository;
 import com.uet.car4r.repository.UserRepository;
 import com.uet.car4r.utils.JwtUtil;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,6 +31,7 @@ public class TokenService {
   private final TokenRepository tokenRepository;
   private final UserMapper userMapper;
   private final UserRepository userRepository;
+  private final CustomerRepository customerRepository;
 
   @Value("${jwt.expiration.accessToken}")
   private Long expirationAccessToken;
@@ -94,7 +100,7 @@ public class TokenService {
   }
 
   private String generateRefreshToken(String email) {
-    return UUID.randomUUID() + "-" + email;
+    return UUID.randomUUID() + "----------" + email;
 
   }
 
@@ -108,7 +114,7 @@ public class TokenService {
                              .messageDetail("Please Log In Again Or Sign Up")
                              .build());
     } else {
-      String email = token.split("-")[1];
+      String email = token.split("----------")[1];
 
       User user = userRepository.getAllByEmail(email);
 
@@ -120,5 +126,60 @@ public class TokenService {
 
       return Optional.of(res);
     }
+  }
+
+  /**
+   * validate access token
+   * @param token: String
+   * @return Optional
+   */
+  public Optional validateAccessToken(String token) {
+    try {
+      Claims claims = jwtUtil.extractToken(token);
+
+      String email = claims.get("email", String.class);
+      String role = claims.get("roles", String.class);
+      Date expiration = claims.getExpiration();
+
+      if (expiration.before(new Date()) || !userRepository.existsUsersByEmail(email)) {
+        return Optional.of(false);
+      } else {
+        if (role.equals(Role.CUSTOMER)) {
+          return Optional.of(customerRepository.getCustomersByEmail(email));
+        }
+
+        return Optional.of(userRepository.getUserByEmail(email));
+      }
+    } catch (ExpiredJwtException expiredJwtException) {
+      System.out.println("Token expired: invalid");
+    } catch (SignatureException signatureException) {
+      System.out.println("Token signature: invalid");
+    } catch (Exception e) {
+      System.out.println("Token invalid");
+    }
+    return Optional.of(false);
+  }
+
+  /**
+   * validate verify token
+   * @param token : String
+   * @return Boolean
+   */
+  public Boolean validateVerifyToken(String token) {
+    try {
+      Claims claims = jwtUtil.extractToken(token);
+      // neu dang con han va subject=CAR$R
+      if (!claims.getExpiration().before(new Date()) && claims.getSubject().equals("CAR$R")) {
+        return true;
+      }
+      return false;
+    } catch (ExpiredJwtException expiredJwtException) {
+      System.out.println("Token expired: invalid");
+    } catch (SignatureException signatureException) {
+      System.out.println("Token signature: invalid");
+    } catch (Exception e) {
+      System.out.println("Token invalid");
+    }
+    return false;
   }
 }

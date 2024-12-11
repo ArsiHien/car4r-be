@@ -1,7 +1,7 @@
 package com.uet.car4r.controller;
 
 import com.uet.car4r.dto.NotificationDTO;
-import com.uet.car4r.dto.RefreshTokenDTO;
+import com.uet.car4r.dto.RequestTokenDTO;
 import com.uet.car4r.repository.TokenRepository;
 import com.uet.car4r.service.TokenService;
 import com.uet.car4r.service.UserService;
@@ -10,26 +10,18 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.server.ServerHttpResponse;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.uet.car4r.dto.UserDTO;
@@ -49,7 +41,6 @@ public class UserController {
   private final TokenService tokenService;
 
   @PostMapping(path = "/login")
-  @PreAuthorize("hasAuthority('ADMIN')")
   public ResponseEntity<Optional> login(@RequestBody UserDTO userDTO) {
     logger.info("UserController -> login(): " + userDTO.getEmail());
     return ResponseEntity.ok(userService.login(userDTO));
@@ -103,6 +94,16 @@ public class UserController {
   public ResponseEntity authWithGoogle(@RequestBody UserDTO userDTO) {
     Optional res = userService.authWithGoogle(userDTO);
     return ResponseEntity.ok(res);
+  }
+
+  @GetMapping("/api/v1/users/{id}")
+  public ResponseEntity getUserById(@PathVariable String id) {
+    return ResponseEntity.ok(userService.getUserById(id));
+  }
+
+  @PostMapping(path = "/verifyAccessToken")
+  public ResponseEntity verifyAccessToken(@RequestBody RequestTokenDTO accessToken) {
+    return ResponseEntity.ok(tokenService.validateAccessToken(accessToken.getToken()));
   }
 
 }

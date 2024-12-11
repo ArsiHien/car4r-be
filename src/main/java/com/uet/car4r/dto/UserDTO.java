@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 /**
  * User
@@ -14,7 +15,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 public class UserDTO {
   private String id;
   private String email;
@@ -25,4 +26,13 @@ public class UserDTO {
   private String phone;
   private Role role;
   private String avatar;
+
+  public CustomerDTO getCustomerDTO() {
+    if (role.equals(Role.CUSTOMER)) {
+      return CustomerDTO
+          .builder()
+          .build();
+    }
+    return null;
+  }
 }

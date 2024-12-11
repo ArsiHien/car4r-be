@@ -22,5 +22,8 @@ public class Customer extends User {
     String address;
 
     @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    Set<Booking> bookings;
+
+    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     Set<Review> reviews;
 }

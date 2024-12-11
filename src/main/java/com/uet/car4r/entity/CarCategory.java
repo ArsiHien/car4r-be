@@ -19,6 +19,7 @@ public class CarCategory {
     String id;
     String name;
     String type;
+    @Lob
     String description;
     int numberOfPerson;
     int price;

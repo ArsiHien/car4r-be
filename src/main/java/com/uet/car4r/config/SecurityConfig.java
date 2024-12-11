@@ -28,11 +28,11 @@ public class SecurityConfig {
   private final JwtUtil jwtUtil;
   private final UserRepository userRepository;
 
-  // encrypt password
-  @Bean
-  public BCryptPasswordEncoder bCryptPasswordEncoder() {
-    return new BCryptPasswordEncoder();
-  }
+    // encrypt password
+    @Bean
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -42,21 +42,21 @@ public class SecurityConfig {
             .anyRequest().permitAll());
         //.addFilterBefore(new JwtAuthenticationFilter(jwtUtil, userRepository), UsernamePasswordAuthenticationFilter.class);
 
-    return http.build();
-  }
+        return http.build();
+    }
 
-  @Bean
-  public CorsConfigurationSource corsConfigurationSource() {
-    CorsConfiguration configuration = new CorsConfiguration();
-    configuration.addAllowedOrigin("http://localhost"); // postman
-    configuration.addAllowedOrigin("http://localhost:5173");//fe
-    configuration.addAllowedMethod("*"); // allow all http method
-    configuration.addAllowedHeader("*"); // allow all header
-    configuration.setAllowCredentials(true); // allow sent credental include cookie
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.addAllowedOrigin("http://localhost"); // postman
+        configuration.addAllowedOrigin("http://localhost:5173");//fe
+        configuration.addAllowedMethod("*"); // allow all http method
+        configuration.addAllowedHeader("*"); // allow all header
+        configuration.setAllowCredentials(true); // allow sent credental include cookie
 
-    UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
-    urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", configuration);
-    return urlBasedCorsConfigurationSource;
-  }
-  
+        UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
+        urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", configuration);
+        return urlBasedCorsConfigurationSource;
+    }
+
 }

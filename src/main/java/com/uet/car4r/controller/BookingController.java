@@ -4,6 +4,7 @@ import com.uet.car4r.dto.request.BookingRequest;
 import com.uet.car4r.dto.response.BookingResponse;
 import com.uet.car4r.entity.Booking;
 import com.uet.car4r.service.BookingService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;

@@ -22,6 +22,7 @@ public class User {
     String lastName;
     String email;
     String phone;
+    @Enumerated(EnumType.STRING)
     Role role;
     String avatar;
 }

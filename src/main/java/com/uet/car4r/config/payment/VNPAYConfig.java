@@ -1,5 +1,5 @@
 package com.uet.car4r.config.payment;
-import com.uet.car4r.Utils.VNPayUtil;
+import com.uet.car4r.utils.VNPayUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;

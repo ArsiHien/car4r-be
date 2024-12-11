@@ -11,7 +11,6 @@ spring:
     multipart:
       max-file-size: 50MB
       max-request-size: 50MB
-
 server:
   port: 8080
   servlet:
@@ -22,6 +21,13 @@ logging:
     org:
       springframework:
         web: info
+
+jwt: # ms
+  expiration:
+    accessToken: 86400000 # 1 day
+    refreshToken: 2592000000 # 30 days
+    verifyToken: 300000 # 3 minutes
+
 
 payment:
   vnPay:

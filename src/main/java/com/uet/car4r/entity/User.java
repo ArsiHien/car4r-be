@@ -4,9 +4,10 @@ import com.uet.car4r.constant.Role;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.SuperBuilder;
 
 @Data
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -22,6 +23,7 @@ public class User {
     String lastName;
     String email;
     String phone;
+    @Enumerated(EnumType.STRING)
     Role role;
     String avatar;
 }

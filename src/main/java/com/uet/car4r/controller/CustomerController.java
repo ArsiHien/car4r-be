@@ -15,12 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(path = "/api/v1/customers")
 public class CustomerController {
   @GetMapping
-  public ResponseEntity getUserById(@PathVariable Long id) {
+  public ResponseEntity getCustomerById(@PathVariable String id) {
     return null;
   }
 
   @PutMapping
-  public ResponseEntity changeInfoUser(@PathVariable Long id, @RequestBody String request) {
+  public ResponseEntity changeInfoCustomer() {
     return null;
   }
 

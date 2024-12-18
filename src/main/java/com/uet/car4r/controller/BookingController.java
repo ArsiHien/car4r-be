@@ -45,6 +45,12 @@ public class BookingController {
         return ResponseEntity.noContent().build();
     }
 
+    @PutMapping("/{bookingId}/cancel")
+    public ResponseEntity<BookingResponse> cancelBooking(@PathVariable String bookingId) {
+        BookingResponse response = bookingService.cancelBooking(bookingId);
+        return ResponseEntity.ok(response);
+    }
+
     @PutMapping("/{bookingId}/assign-car/{carId}")
     public ResponseEntity<BookingResponse> assignCarToBooking(@PathVariable String bookingId, @PathVariable String carId) {
         return ResponseEntity.ok(bookingService.assignCarToBooking(bookingId, carId));

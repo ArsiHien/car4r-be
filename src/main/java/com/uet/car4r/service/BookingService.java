@@ -94,6 +94,17 @@ public class BookingService {
         return bookingMapper.toBookingResponse(booking);
     }
 
+    @Transactional
+    public BookingResponse cancelBooking(String bookingId) {
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new EntityNotFoundException("Booking not found"));
+
+        booking.setStatus(Booking.BookingStatus.CANCELED);
+        bookingRepository.save(booking);
+
+        return bookingMapper.toBookingResponse(booking);
+    }
+
     public Booking.BookingStatus validateStatus(String status) throws InvalidPropertiesFormatException {
         try {
             return Booking.BookingStatus.valueOf(status.toUpperCase());

@@ -15,6 +15,7 @@ public class BookingResponse {
     String id;
     String customerName;
     String carCategoryName;
+    String carCategoryId;
     String carLicensePlate;
     LocalDate bookingDate;
     LocalDate startDate;

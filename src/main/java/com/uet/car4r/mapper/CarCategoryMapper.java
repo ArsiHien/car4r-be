@@ -1,9 +1,9 @@
 package com.uet.car4r.mapper;
 
 import com.uet.car4r.dto.request.CarCategoryRequest;
-import com.uet.car4r.dto.response.CarCategoryBasicResponse;
-import com.uet.car4r.dto.response.CarCategoryCountResponse;
-import com.uet.car4r.dto.response.CarCategoryDetailResponse;
+import com.uet.car4r.dto.response.carcategory.CarCategoryBasicResponse;
+import com.uet.car4r.dto.response.carcategory.CarCategoryCountResponse;
+import com.uet.car4r.dto.response.carcategory.CarCategoryDetailResponse;
 import com.uet.car4r.entity.CarCategory;
 import com.uet.car4r.projection.BasicCarCategoryProjection;
 import com.uet.car4r.projection.CarCategoryCountProjection;

@@ -1,6 +1,6 @@
 package com.uet.car4r.mapper;
 
-import com.uet.car4r.dto.response.CarCategoryRentalStatisticResponse;
+import com.uet.car4r.dto.response.carcategory.CarCategoryRentalStatisticResponse;
 import com.uet.car4r.dto.response.MonthlyRevenueResponse;
 import com.uet.car4r.dto.response.RevenueByCategoryTypeResponse;
 import com.uet.car4r.projection.CarCategoryRentalStatisticsProjection;

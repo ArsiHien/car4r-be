@@ -2,6 +2,10 @@ package com.uet.car4r.service;
 
 import com.uet.car4r.dto.request.CarCategoryRequest;
 import com.uet.car4r.dto.response.*;
+import com.uet.car4r.dto.response.car.CarImageResponse;
+import com.uet.car4r.dto.response.carcategory.CarCategoryBasicResponse;
+import com.uet.car4r.dto.response.carcategory.CarCategoryCountResponse;
+import com.uet.car4r.dto.response.carcategory.CarCategoryDetailResponse;
 import com.uet.car4r.entity.Amenity;
 import com.uet.car4r.entity.CarCategory;
 import com.uet.car4r.entity.CarImage;

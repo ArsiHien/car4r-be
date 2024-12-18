@@ -2,9 +2,9 @@ package com.uet.car4r.service;
 
 import com.uet.car4r.constant.AppConstants;
 import com.uet.car4r.dto.request.CarRequest;
-import com.uet.car4r.dto.response.CarDetailResponse;
-import com.uet.car4r.dto.response.CarWithCategoryResponse;
-import com.uet.car4r.dto.response.CarWithStatusResponse;
+import com.uet.car4r.dto.response.car.CarDetailResponse;
+import com.uet.car4r.dto.response.car.CarWithCategoryResponse;
+import com.uet.car4r.dto.response.car.CarWithStatusResponse;
 import com.uet.car4r.entity.Car;
 import com.uet.car4r.entity.CarCategory;
 import com.uet.car4r.entity.CarGpsLog;
@@ -22,7 +22,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 

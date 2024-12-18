@@ -1,4 +1,4 @@
-package com.uet.car4r.dto.response;
+package com.uet.car4r.dto.response.carcategory;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -8,7 +8,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CarImageResponse {
-    String id;
-    String imageUrl;
+public class CarCategoryCountResponse {
+    String groupKey;
+    int count;
 }

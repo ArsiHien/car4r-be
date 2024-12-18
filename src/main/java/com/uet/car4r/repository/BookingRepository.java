@@ -79,5 +79,45 @@ public interface BookingRepository extends JpaRepository<Booking, String> {
              ORDER BY revenue DESC
             """)
     List<RevenueByCategoryProjection> findRevenueByCategoryType();
+
+    @Query("""
+           SELECT b.id AS id,
+                  CONCAT(c.firstName, ' ', c.lastName) AS customerName,
+                  cc.name AS carCategoryName,
+                  car.licensePlate AS carLicensePlate,
+                  b.bookingDate AS bookingDate,
+                  b.startDate AS startDate,
+                  b.returnDate AS returnDate,
+                  b.loanPlace AS loanPlace,
+                  b.returnPlace AS returnPlace,
+                  b.totalPrice AS totalPrice,
+                  b.status AS status
+           FROM Booking b
+           LEFT JOIN b.customer c
+           LEFT JOIN b.carCategory cc
+           LEFT JOIN Car car ON car.id = b.assignedCar.id
+           WHERE b.status IN (:statuses)
+           """)
+    List<BookingProjection> findAllCurrentBookings(@Param("statuses") List<Booking.BookingStatus> statuses);
+
+    @Query("""
+           SELECT b.id AS id,
+                  CONCAT(c.firstName, ' ', c.lastName) AS customerName,
+                  cc.name AS carCategoryName,
+                  car.licensePlate AS carLicensePlate,
+                  b.bookingDate AS bookingDate,
+                  b.startDate AS startDate,
+                  b.returnDate AS returnDate,
+                  b.loanPlace AS loanPlace,
+                  b.returnPlace AS returnPlace,
+                  b.totalPrice AS totalPrice,
+                  b.status AS status
+           FROM Booking b
+           LEFT JOIN b.customer c
+           LEFT JOIN b.carCategory cc
+           LEFT JOIN Car car ON car.id = b.assignedCar.id
+           WHERE b.status IN (:statuses)
+           """)
+    List<BookingProjection> findAllPastBookings(@Param("statuses") List<Booking.BookingStatus> statuses);
 }
 

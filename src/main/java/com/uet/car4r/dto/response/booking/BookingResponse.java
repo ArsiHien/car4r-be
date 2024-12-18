@@ -1,4 +1,4 @@
-package com.uet.car4r.dto.response;
+package com.uet.car4r.dto.response.booking;
 
 
 import lombok.*;

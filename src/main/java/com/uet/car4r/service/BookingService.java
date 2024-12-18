@@ -1,7 +1,7 @@
 package com.uet.car4r.service;
 
 import com.uet.car4r.dto.request.BookingRequest;
-import com.uet.car4r.dto.response.BookingResponse;
+import com.uet.car4r.dto.response.booking.BookingResponse;
 import com.uet.car4r.entity.Booking;
 import com.uet.car4r.entity.Car;
 import com.uet.car4r.entity.CarCategory;

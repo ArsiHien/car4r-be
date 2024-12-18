@@ -1,5 +1,8 @@
 package com.uet.car4r.dto.response;
 
+import com.uet.car4r.constant.Role;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -8,14 +11,11 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CarCategoryBasicResponse {
+public class StaffResponse {
     String id;
+    String username;
     String name;
-    String type;
-    int numberOfPerson;
-    String steering;
-    int gasoline;
-    int price;
-    int promotionPrice;
-    String mainImage;
+    String email;
+    String phone;
+    String avatar;
 }

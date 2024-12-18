@@ -1,9 +1,9 @@
 package com.uet.car4r.controller;
 
 import com.uet.car4r.dto.request.CarCategoryRequest;
-import com.uet.car4r.dto.response.CarCategoryBasicResponse;
-import com.uet.car4r.dto.response.CarCategoryCountResponse;
-import com.uet.car4r.dto.response.CarCategoryDetailResponse;
+import com.uet.car4r.dto.response.carcategory.CarCategoryBasicResponse;
+import com.uet.car4r.dto.response.carcategory.CarCategoryCountResponse;
+import com.uet.car4r.dto.response.carcategory.CarCategoryDetailResponse;
 import com.uet.car4r.service.CarCategoryService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;

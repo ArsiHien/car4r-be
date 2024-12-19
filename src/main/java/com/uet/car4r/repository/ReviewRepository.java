@@ -13,13 +13,31 @@ import java.util.Set;
 public interface ReviewRepository extends JpaRepository<Review, String> {
     @Query("""
             SELECT r.id AS id,
-                   CONCAT(r.customer.firstName, ' ', r.customer.lastName) AS customerName,
-                   r.category.name AS carCategoryName,
+                   CONCAT(b.customer.firstName, ' ', b.customer.lastName) AS customerName,
+                   cc.name AS carCategoryName,
                    r.review AS review,
                    r.rating AS rating,
                    r.reviewDate AS reviewDate
             FROM Review r
-            WHERE r.category.id = :categoryId
+            JOIN r.booking b
+            JOIN b.assignedCar c
+            JOIN c.category cc
+            WHERE cc.id = :categoryId
             """)
     Set<ReviewProjection> findByCategoryId(@Param("categoryId") String categoryId);
+
+    @Query("""
+            SELECT r.id AS id,
+                   CONCAT(b.customer.firstName, ' ', b.customer.lastName) AS customerName,
+                   cc.name AS carCategoryName,
+                   r.review AS review,
+                   r.rating AS rating,
+                   r.reviewDate AS reviewDate
+            FROM Review r
+            JOIN r.booking b
+            JOIN b.assignedCar c
+            JOIN c.category cc
+            WHERE b.id = :bookingId
+            """)
+    ReviewProjection findByBookingId(@Param("bookingId") String bookingId);
 }

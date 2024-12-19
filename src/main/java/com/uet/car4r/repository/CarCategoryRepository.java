@@ -29,9 +29,9 @@ public interface CarCategoryRepository extends JpaRepository<CarCategory, String
 
 
     @Query("""
-            SELECT c.id AS id, 
-                   c.name AS name, 
-                   c.type AS type, 
+            SELECT c.id AS id,
+                   c.name AS name,
+                   c.type AS type,
                    c.numberOfPerson AS numberOfPerson, 
                    c.steering AS steering, 
                    c.gasoline AS gasoline, 
@@ -71,7 +71,7 @@ public interface CarCategoryRepository extends JpaRepository<CarCategory, String
             FROM CarCategory cc
             LEFT JOIN cc.cars c
             LEFT JOIN c.booking b
-            LEFT JOIN cc.reviews r
+            LEFT JOIN b.review r
             WHERE b.status = com.uet.car4r.entity.Booking.BookingStatus.APPROVED
             GROUP BY cc.id, cc.name, cc.type, cc.numberOfPerson, cc.steering,
                      cc.gasoline, cc.price, cc.promotionPrice, cc.mainImage
@@ -88,7 +88,7 @@ public interface CarCategoryRepository extends JpaRepository<CarCategory, String
             FROM CarCategory cc
             LEFT JOIN cc.cars c
             LEFT JOIN c.booking b
-            LEFT JOIN cc.reviews r
+            LEFT JOIN b.review r
             WHERE b.status = com.uet.car4r.entity.Booking.BookingStatus.APPROVED
             GROUP BY cc.id, cc.name, cc.type, cc.numberOfPerson, cc.steering,
                      cc.gasoline, cc.price, cc.promotionPrice, cc.mainImage
@@ -105,7 +105,7 @@ public interface CarCategoryRepository extends JpaRepository<CarCategory, String
             FROM CarCategory cc
             LEFT JOIN cc.cars c
             LEFT JOIN c.booking b
-            LEFT JOIN cc.reviews r
+            LEFT JOIN b.review r
             WHERE b.status = com.uet.car4r.entity.Booking.BookingStatus.APPROVED
             GROUP BY cc.id, cc.name, cc.type, cc.numberOfPerson, cc.steering,
                      cc.gasoline, cc.price, cc.promotionPrice, cc.mainImage

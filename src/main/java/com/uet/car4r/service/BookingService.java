@@ -7,11 +7,10 @@ import com.uet.car4r.entity.Car;
 import com.uet.car4r.entity.CarCategory;
 import com.uet.car4r.entity.Customer;
 import com.uet.car4r.mapper.BookingMapper;
+import com.uet.car4r.mapper.ReviewMapper;
 import com.uet.car4r.projection.BookingProjection;
-import com.uet.car4r.repository.BookingRepository;
-import com.uet.car4r.repository.CarCategoryRepository;
-import com.uet.car4r.repository.CarRepository;
-import com.uet.car4r.repository.CustomerRepository;
+import com.uet.car4r.projection.ReviewProjection;
+import com.uet.car4r.repository.*;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
@@ -31,18 +30,39 @@ public class BookingService {
     CustomerRepository customerRepository;
     CarCategoryRepository carCategoryRepository;
     CarRepository carRepository;
+    ReviewRepository reviewRepository;
     BookingMapper bookingMapper;
+    ReviewMapper reviewMapper;
 
     public BookingResponse getBooking(String bookingId) {
         BookingProjection projection = bookingRepository.findBookingProjectionById(bookingId)
                 .orElseThrow(() -> new EntityNotFoundException("Booking not found"));
-        return bookingMapper.toBookingResponse(projection);
+
+        BookingResponse response = bookingMapper.toBookingResponse(projection);
+
+        ReviewProjection reviewProjection = reviewRepository.findByBookingId(bookingId);
+        if(reviewProjection != null) {
+            response.setReview(reviewMapper.toReviewResponse(reviewProjection));
+        }
+
+        return response;
     }
 
     public List<BookingResponse> getBookings() {
         List<BookingProjection> projections = bookingRepository.findAllBookings();
-        return projections.stream()
-                .map(bookingMapper::toBookingResponse)
+        return mapBookingsToResponses(projections);
+    }
+
+    public List<BookingResponse> mapBookingsToResponses(List<BookingProjection> bookings) {
+        return bookings.stream()
+                .map(projection -> {
+                    BookingResponse response = bookingMapper.toBookingResponse(projection);
+                    ReviewProjection reviewProjection = reviewRepository.findByBookingId(projection.getId());
+                    if (reviewProjection != null) {
+                        response.setReview(reviewMapper.toReviewResponse(reviewProjection));
+                    }
+                    return response;
+                })
                 .collect(Collectors.toList());
     }
 

@@ -28,7 +28,5 @@ public interface DetailCarCategoryProjection {
     Set<CarImageProjection> getCarImages();
 
     Set<AmenityProjection> getAmenities();
-
-    Set<ReviewProjection> getReviews();
 }
 

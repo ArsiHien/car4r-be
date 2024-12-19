@@ -11,7 +11,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@ToString(exclude = "category")
 @Entity
 public class Review {
     @Id
@@ -21,8 +20,8 @@ public class Review {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     Customer customer;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    CarCategory category;
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    Booking booking;
 
     String review;
     int rating;

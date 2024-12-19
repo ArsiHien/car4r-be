@@ -96,9 +96,10 @@ public interface BookingRepository extends JpaRepository<Booking, String> {
            LEFT JOIN b.customer c
            LEFT JOIN b.carCategory cc
            LEFT JOIN Car car ON car.id = b.assignedCar.id
-           WHERE b.status IN (:statuses)
+           WHERE b.status IN (:statuses) AND c.id = :customerId
            """)
-    List<BookingProjection> findAllCurrentBookings(@Param("statuses") List<Booking.BookingStatus> statuses);
+    List<BookingProjection> findAllCurrentBookings(@Param("statuses") List<Booking.BookingStatus> statuses,
+                                                   @Param("customerId") String customerId);
 
     @Query("""
            SELECT b.id AS id,
@@ -116,8 +117,9 @@ public interface BookingRepository extends JpaRepository<Booking, String> {
            LEFT JOIN b.customer c
            LEFT JOIN b.carCategory cc
            LEFT JOIN Car car ON car.id = b.assignedCar.id
-           WHERE b.status IN (:statuses)
+           WHERE b.status IN (:statuses) AND c.id = :customerId
            """)
-    List<BookingProjection> findAllPastBookings(@Param("statuses") List<Booking.BookingStatus> statuses);
+    List<BookingProjection> findAllPastBookings(@Param("statuses") List<Booking.BookingStatus> statuses,
+                                                @Param("customerId") String customerId);
 }
 

@@ -29,6 +29,9 @@ public class Booking {
     @ManyToOne
     Car assignedCar;
 
+    @OneToOne
+    Review review;
+
     LocalDate bookingDate;
     LocalDate startDate;
     LocalDate returnDate;

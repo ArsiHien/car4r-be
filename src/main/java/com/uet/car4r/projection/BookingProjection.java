@@ -26,4 +26,7 @@ public interface BookingProjection {
     String getStatus();
 
     ReviewProjection getReview();
+
+    String getCarCategoryId();
+
 }

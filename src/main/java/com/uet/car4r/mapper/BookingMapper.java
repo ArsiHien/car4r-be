@@ -14,8 +14,10 @@ public interface BookingMapper {
     @Mapping(target = "customerName", expression = "java(booking.getCustomer().getFirstName() + ' ' + booking.getCustomer().getLastName())")
     @Mapping(target = "carCategoryName", source = "carCategory.name")
     @Mapping(target = "carLicensePlate", expression = "java(booking.getAssignedCar() != null ? booking.getAssignedCar().getLicensePlate() : null)")
+    @Mapping(target = "carCategoryId", source = "carCategory.id")
     BookingResponse toBookingResponse(Booking booking);
 
+    @Mapping(target = "carCategoryId", source = "carCategoryId")
     BookingResponse toBookingResponse(BookingProjection projection);
 
 //    List<BookingResponse> toBookingResponseList(List<Booking> bookings);

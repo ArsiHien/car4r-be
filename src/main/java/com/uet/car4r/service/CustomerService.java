@@ -17,22 +17,24 @@ import java.util.List;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CustomerService {
+    BookingService bookingService;
     BookingRepository bookingRepository;
-    BookingMapper bookingMapper;
 
     public BookingPartitionResponse getBookings(String customerId) {
         List<Booking.BookingStatus> currentStatuses = List.of(Booking.BookingStatus.IN_PROCESS, Booking.BookingStatus.APPROVED);
         List<Booking.BookingStatus> pastStatuses = List.of(Booking.BookingStatus.COMPLETED, Booking.BookingStatus.CANCELED);
 
-        List<BookingProjection> currentBookings = bookingRepository.findAllCurrentBookings(currentStatuses);
-        List<BookingProjection> pastBookings = bookingRepository.findAllPastBookings(pastStatuses);
+        List<BookingProjection> currentBookings = bookingRepository.findAllCurrentBookings(currentStatuses, customerId);
+        List<BookingProjection> pastBookings = bookingRepository.findAllPastBookings(pastStatuses, customerId);
 
-        List<BookingResponse> currentBookingResponses = bookingMapper.toBookingResponseList(currentBookings);
-        List<BookingResponse> pastBookingResponses = bookingMapper.toBookingResponseList(pastBookings);
+        // Reuse the shared logic
+        List<BookingResponse> currentBookingResponses = bookingService.mapBookingsToResponses(currentBookings);
+        List<BookingResponse> pastBookingResponses = bookingService.mapBookingsToResponses(pastBookings);
 
         return BookingPartitionResponse.builder()
                 .currentBookings(currentBookingResponses)
                 .pastBookings(pastBookingResponses)
                 .build();
     }
+
 }

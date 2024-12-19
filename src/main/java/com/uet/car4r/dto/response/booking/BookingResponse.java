@@ -1,6 +1,7 @@
 package com.uet.car4r.dto.response.booking;
 
 
+import com.uet.car4r.dto.response.ReviewResponse;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -23,4 +24,5 @@ public class BookingResponse {
     String returnPlace;
     Long totalPrice;
     String status;
+    ReviewResponse review;
 }

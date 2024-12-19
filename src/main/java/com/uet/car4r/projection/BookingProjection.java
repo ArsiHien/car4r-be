@@ -24,4 +24,6 @@ public interface BookingProjection {
     Long getTotalPrice();
 
     String getStatus();
+
+    ReviewProjection getReview();
 }

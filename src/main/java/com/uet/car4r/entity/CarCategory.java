@@ -34,9 +34,6 @@ public class CarCategory {
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     Set<CarImage> carImages;
 
-    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    Set<Review> reviews;
-
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "car_amenities",

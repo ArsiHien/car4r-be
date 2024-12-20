@@ -11,10 +11,14 @@ spring:
     multipart:
       max-file-size: 50MB
       max-request-size: 50MB
+  web:
+    resources:
+      static-locations: classpath:/META-INF/resources/, classpath:/resources/, classpath:/static/, classpath:/, classpath:/public/
+
 server:
   port: 8080
   servlet:
-    context-path: /api
+#    context-path: /api
 
 logging:
   level:

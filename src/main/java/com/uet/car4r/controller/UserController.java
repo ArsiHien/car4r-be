@@ -32,7 +32,7 @@ import org.springframework.web.servlet.view.RedirectView;
  * UserController: api login & api register
  */
 @RestController
-@RequestMapping(path = "/v1/users")
+@RequestMapping(path = "/api/v1/users")
 @RequiredArgsConstructor
 public class UserController {
   private static Logger logger = LoggerFactory.getLogger(UserController.class);

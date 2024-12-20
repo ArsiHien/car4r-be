@@ -18,7 +18,7 @@ import java.util.List;
  * CustomerController
  */
 @RestController
-@RequestMapping(path = "/customers")
+@RequestMapping(path = "/api/customers")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CustomerController {

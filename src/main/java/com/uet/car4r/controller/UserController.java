@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -70,17 +71,8 @@ public class UserController {
     return ResponseEntity.ok(userService.resetPassword(email));
   }
 
-  @PostMapping(path = "/refreshToken")
-  public ResponseEntity refreshAccessToken(HttpServletRequest request) {
-    logger.info("refreshAccessToken()");
-    Cookie cookies[] = request.getCookies();
-    String refreshToken = Arrays.stream(request.getCookies())
-        .filter(cookie -> "refreshToken".equals(cookie.getName()))
-        .findFirst()
-        .map(cookie -> cookie.getValue())
-        .orElse(null);
-
-
+  @GetMapping (path = "/refreshToken")
+  public ResponseEntity refreshAccessToken(@CookieValue("refreshToken") String refreshToken) {
     if (refreshToken == null || refreshToken.isEmpty()) {
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Please Log In Again Or Sign Up");
     }
@@ -89,6 +81,7 @@ public class UserController {
 
     return ResponseEntity.ok(res);
    }
+
 
   @PostMapping(path = "/oauth/google")
   public ResponseEntity authWithGoogle(@RequestBody UserDTO userDTO) {

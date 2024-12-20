@@ -157,6 +157,7 @@
                             </goals>
                         </execution>
                     </excludes>
+                    <compilerArguments><arg>--enable-preview</arg></compilerArguments>
                 </configuration>
             </plugin>
             <plugin>

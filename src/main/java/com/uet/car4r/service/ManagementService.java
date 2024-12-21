@@ -1,5 +1,6 @@
 package com.uet.car4r.service;
 
+import com.uet.car4r.dto.response.RevenueResponse;
 import com.uet.car4r.dto.response.carcategory.CarCategoryRentalStatisticResponse;
 import com.uet.car4r.dto.response.MonthlyRevenueResponse;
 import com.uet.car4r.dto.response.RevenueByCategoryTypeResponse;
@@ -12,6 +13,7 @@ import com.uet.car4r.projection.RevenueByCategoryProjection;
 import com.uet.car4r.projection.TopCustomerProjection;
 import com.uet.car4r.repository.BookingRepository;
 import com.uet.car4r.repository.CarCategoryRepository;
+import com.uet.car4r.repository.CarRepository;
 import com.uet.car4r.repository.CustomerRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -32,10 +34,32 @@ public class ManagementService {
     CustomerRepository customerRepository;
     ManagementMapper managementMapper;
     CustomerMapper customerMapper;
+    CarRepository carRepository;
 
+    public RevenueResponse getRevenueData() {
+        long totalRevenue = getTotalRevenue();
+        //long todayRevenue = getTodayRevenue();
+        long totalCar = carRepository.getTotalCar();
+        long rentedCar = carRepository.getRentedCar();
+        long availableCar = carRepository.getAvailableCar();
+        RevenueResponse response = new RevenueResponse();
+        response.setTotalRevenue(totalRevenue);
+        //response.setTodayRevenue(todayRevenue);
+        response.setTotalCar(totalCar);
+        response.setRentedCar(rentedCar);
+        response.setAvailableCar(availableCar);
+        return response;
+    }
     public long getTotalRevenue() {
         return bookingRepository.calculateTotalRevenue();
     }
+
+    /**public long getTodayRevenue() {
+        LocalDate today = LocalDate.now();
+        LocalDate start = LocalDate.from(today.atTime(0, 0));
+        LocalDate end = LocalDate.from(today.atTime(23, 59));
+        return bookingRepository.calculateTodayRevenue(start, end);
+    }**/
 
     public List<MonthlyRevenueResponse> getLast12MonthsRevenue() {
         LocalDate endDate = LocalDate.now();

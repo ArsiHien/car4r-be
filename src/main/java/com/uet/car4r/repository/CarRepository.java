@@ -78,5 +78,24 @@ public interface CarRepository extends JpaRepository<Car, String> {
             """)
     CarWithStatusProjection findCarStatusCount(@Param("carStatus") Car.CarStatus carStatus);
 
+    @Query("""
+            SELECT COUNT(c.id) FROM Car c
+            """)
+    long getTotalCar();
+
+    @Query("""
+            SELECT COUNT(c.id) 
+            FROM Car c 
+            WHERE c.status = com.uet.car4r.entity.Car.CarStatus.RENTED
+            """)
+    long getRentedCar();
+
+    @Query("""
+            SELECT COUNT(c.id) 
+            FROM Car c 
+            WHERE c.status = com.uet.car4r.entity.Car.CarStatus.AVAILABLE
+            """)
+    long getAvailableCar();
+
     boolean existsByLicensePlate(String licensePlate);
 }

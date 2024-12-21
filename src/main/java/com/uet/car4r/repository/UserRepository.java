@@ -35,5 +35,8 @@ public interface UserRepository extends JpaRepository<User, String> {
     @Query("SELECT u FROM User u WHERE u.id = :id AND u.role = :role")
     Optional<User> getStaffById(@Param("id") String id, @Param("role") Role role);
 
+    @Query("SELECT COUNT(u.id) FROM User u WHERE u.role = com.uet.car4r.constant.Role.CUSTOMER")
+    long getNumberOfCustomer();
+
     boolean existsByUsername(String uniqueUsername);
 }

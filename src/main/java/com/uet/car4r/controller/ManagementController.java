@@ -1,10 +1,7 @@
 package com.uet.car4r.controller;
 
-import com.uet.car4r.dto.response.RevenueResponse;
+import com.uet.car4r.dto.response.*;
 import com.uet.car4r.dto.response.carcategory.CarCategoryRentalStatisticResponse;
-import com.uet.car4r.dto.response.MonthlyRevenueResponse;
-import com.uet.car4r.dto.response.RevenueByCategoryTypeResponse;
-import com.uet.car4r.dto.response.TopCustomerResponse;
 import com.uet.car4r.service.ManagementService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -61,5 +58,15 @@ public class ManagementController {
     @GetMapping("customers/top")
     public ResponseEntity<List<TopCustomerResponse>> getTopCustomers() {
         return ResponseEntity.ok(managementService.getTopCustomers());
+    }
+
+    @GetMapping("reviews/rating")
+    public ResponseEntity<RatingResponse> getRating() {
+        return ResponseEntity.ok(managementService.getRating());
+    }
+
+    @GetMapping("customers/number")
+    public ResponseEntity<Long> getNumberOfCustomer() {
+        return ResponseEntity.ok(managementService.getNumberOfCustomer());
     }
 }

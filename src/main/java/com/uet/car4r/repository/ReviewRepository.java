@@ -1,5 +1,6 @@
 package com.uet.car4r.repository;
 
+import com.uet.car4r.dto.response.RatingResponse;
 import com.uet.car4r.entity.Review;
 import com.uet.car4r.projection.ReviewProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -40,4 +41,39 @@ public interface ReviewRepository extends JpaRepository<Review, String> {
             WHERE b.id = :bookingId
             """)
     ReviewProjection findByBookingId(@Param("bookingId") String bookingId);
+
+    @Query("""
+            SELECT COUNT(r.id)
+            FROM Review r
+            WHERE r.rating = 1
+            """)
+    long getOneStar();
+
+    @Query("""
+            SELECT COUNT(r.id)
+            FROM Review r
+            WHERE r.rating = 2
+            """)
+    long getTwoStar();
+
+    @Query("""
+            SELECT COUNT(r.id)
+            FROM Review r
+            WHERE r.rating = 3
+            """)
+    long getThreeStar();
+
+    @Query("""
+            SELECT COUNT(r.id)
+            FROM Review r
+            WHERE r.rating = 4
+            """)
+    long getFourStar();
+
+    @Query("""
+            SELECT COUNT(r.id)
+            FROM Review r
+            WHERE r.rating = 5
+            """)
+    long getFiveStar();
 }

@@ -8,11 +8,10 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class RevenueResponse {
-    long totalRevenue;
-    //long todayRevenue;
-    long totalCar;
-    long rentedCar;
-    long availableCar;
-    long numberOfCustomer;
+public class RatingResponse {
+    long one;
+    long two;
+    long three;
+    long four;
+    long five;
 }

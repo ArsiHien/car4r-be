@@ -1,8 +1,5 @@
-package com.uet.car4r.dto.response;
+package com.uet.car4r.dto.response.staff;
 
-import com.uet.car4r.constant.Role;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 

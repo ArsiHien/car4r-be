@@ -17,7 +17,8 @@ public interface CustomerRepository extends JpaRepository<Customer, String> {
                    COUNT(b) AS bookingCount, COALESCE(SUM(b.totalPrice), 0) AS totalRevenue
             FROM Customer c
             LEFT JOIN c.bookings b
-            WHERE b.status = com.uet.car4r.entity.Booking.BookingStatus.APPROVED
+            WHERE b.status IN (com.uet.car4r.entity.Booking.BookingStatus.APPROVED,
+                                com.uet.car4r.entity.Booking.BookingStatus.COMPLETED)
             GROUP BY c.id, c.firstName, c.lastName, c.email
             ORDER BY COUNT(b) DESC, SUM(b.totalPrice) DESC
             LIMIT 5

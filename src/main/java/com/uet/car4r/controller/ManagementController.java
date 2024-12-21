@@ -1,5 +1,6 @@
 package com.uet.car4r.controller;
 
+import com.uet.car4r.dto.response.RevenueResponse;
 import com.uet.car4r.dto.response.carcategory.CarCategoryRentalStatisticResponse;
 import com.uet.car4r.dto.response.MonthlyRevenueResponse;
 import com.uet.car4r.dto.response.RevenueByCategoryTypeResponse;
@@ -21,6 +22,11 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ManagementController {
     ManagementService managementService;
+
+    @GetMapping("/revenue/overview")
+    public ResponseEntity<RevenueResponse> getRevenueData() {
+        return ResponseEntity.ok(managementService.getRevenueData());
+    }
 
     @GetMapping("/revenue/total")
     public ResponseEntity<Long> getTotalRevenue() {

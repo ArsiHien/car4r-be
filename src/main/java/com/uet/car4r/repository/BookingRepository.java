@@ -57,13 +57,17 @@ public interface BookingRepository extends JpaRepository<Booking, String> {
             """)
     List<BookingProjection> findAllBookings();
 
-    @Query("SELECT SUM(b.totalPrice) FROM Booking b WHERE b.status = com.uet.car4r.entity.Booking.BookingStatus.APPROVED")
+    @Query("SELECT SUM(b.totalPrice) FROM Booking b " +
+            "WHERE b.status IN (com.uet.car4r.entity.Booking.BookingStatus.APPROVED, " +
+            "com.uet.car4r.entity.Booking.BookingStatus.COMPLETED)")
     long calculateTotalRevenue();
 
     @Query("""
              SELECT MONTH(b.bookingDate) AS month, YEAR(b.bookingDate) AS year, COALESCE(SUM(b.totalPrice), 0) AS revenue
              FROM Booking b
-             WHERE b.status = com.uet.car4r.entity.Booking.BookingStatus.APPROVED AND b.bookingDate BETWEEN :startDate AND :endDate
+             WHERE b.status IN (com.uet.car4r.entity.Booking.BookingStatus.APPROVED,
+                                 com.uet.car4r.entity.Booking.BookingStatus.COMPLETED)
+                 AND b.bookingDate BETWEEN :startDate AND :endDate
              GROUP BY YEAR(b.bookingDate), MONTH(b.bookingDate)
              ORDER BY YEAR(b.bookingDate), MONTH(b.bookingDate)
             """)
@@ -74,51 +78,52 @@ public interface BookingRepository extends JpaRepository<Booking, String> {
                     COALESCE(SUM(b.totalPrice), 0) AS revenue
              FROM Booking b
              JOIN b.carCategory cc
-             WHERE b.status = com.uet.car4r.entity.Booking.BookingStatus.APPROVED
+             WHERE b.status IN (com.uet.car4r.entity.Booking.BookingStatus.APPROVED,
+                                com.uet.car4r.entity.Booking.BookingStatus.COMPLETED)
              GROUP BY cc.type
              ORDER BY revenue DESC
             """)
     List<RevenueByCategoryProjection> findRevenueByCategoryType();
 
     @Query("""
-           SELECT b.id AS id,
-                  CONCAT(c.firstName, ' ', c.lastName) AS customerName,
-                  cc.name AS carCategoryName,
-                  car.licensePlate AS carLicensePlate,
-                  b.bookingDate AS bookingDate,
-                  b.startDate AS startDate,
-                  b.returnDate AS returnDate,
-                  b.loanPlace AS loanPlace,
-                  b.returnPlace AS returnPlace,
-                  b.totalPrice AS totalPrice,
-                  b.status AS status
-           FROM Booking b
-           LEFT JOIN b.customer c
-           LEFT JOIN b.carCategory cc
-           LEFT JOIN Car car ON car.id = b.assignedCar.id
-           WHERE b.status IN (:statuses) AND c.id = :customerId
-           """)
+            SELECT b.id AS id,
+                   CONCAT(c.firstName, ' ', c.lastName) AS customerName,
+                   cc.name AS carCategoryName,
+                   car.licensePlate AS carLicensePlate,
+                   b.bookingDate AS bookingDate,
+                   b.startDate AS startDate,
+                   b.returnDate AS returnDate,
+                   b.loanPlace AS loanPlace,
+                   b.returnPlace AS returnPlace,
+                   b.totalPrice AS totalPrice,
+                   b.status AS status
+            FROM Booking b
+            LEFT JOIN b.customer c
+            LEFT JOIN b.carCategory cc
+            LEFT JOIN Car car ON car.id = b.assignedCar.id
+            WHERE b.status IN (:statuses) AND c.id = :customerId
+            """)
     List<BookingProjection> findAllCurrentBookings(@Param("statuses") List<Booking.BookingStatus> statuses,
                                                    @Param("customerId") String customerId);
 
     @Query("""
-           SELECT b.id AS id,
-                  CONCAT(c.firstName, ' ', c.lastName) AS customerName,
-                  cc.name AS carCategoryName,
-                  car.licensePlate AS carLicensePlate,
-                  b.bookingDate AS bookingDate,
-                  b.startDate AS startDate,
-                  b.returnDate AS returnDate,
-                  b.loanPlace AS loanPlace,
-                  b.returnPlace AS returnPlace,
-                  b.totalPrice AS totalPrice,
-                  b.status AS status
-           FROM Booking b
-           LEFT JOIN b.customer c
-           LEFT JOIN b.carCategory cc
-           LEFT JOIN Car car ON car.id = b.assignedCar.id
-           WHERE b.status IN (:statuses) AND c.id = :customerId
-           """)
+            SELECT b.id AS id,
+                   CONCAT(c.firstName, ' ', c.lastName) AS customerName,
+                   cc.name AS carCategoryName,
+                   car.licensePlate AS carLicensePlate,
+                   b.bookingDate AS bookingDate,
+                   b.startDate AS startDate,
+                   b.returnDate AS returnDate,
+                   b.loanPlace AS loanPlace,
+                   b.returnPlace AS returnPlace,
+                   b.totalPrice AS totalPrice,
+                   b.status AS status
+            FROM Booking b
+            LEFT JOIN b.customer c
+            LEFT JOIN b.carCategory cc
+            LEFT JOIN Car car ON car.id = b.assignedCar.id
+            WHERE b.status IN (:statuses) AND c.id = :customerId
+            """)
     List<BookingProjection> findAllPastBookings(@Param("statuses") List<Booking.BookingStatus> statuses,
                                                 @Param("customerId") String customerId);
 }

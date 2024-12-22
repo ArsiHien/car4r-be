@@ -58,5 +58,11 @@ public class BookingController {
     public ResponseEntity<BookingResponse> updateBookingStatus(@PathVariable String bookingId, @RequestParam String status) throws InvalidPropertiesFormatException {
         return ResponseEntity.ok(bookingService.updateBookingStatus(bookingId, status));
     }
+    
+    @PostMapping("/{bookingId}/complete")
+    public ResponseEntity<BookingResponse> completeBooking(@PathVariable String bookingId) {
+        BookingResponse response = bookingService.completeBooking(bookingId);
+        return ResponseEntity.ok(response);
+}
 
 }

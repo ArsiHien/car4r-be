@@ -125,6 +125,29 @@ public class BookingService {
         return bookingMapper.toBookingResponse(booking);
     }
 
+    @Transactional
+    public BookingResponse completeBooking(String bookingId) {
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new EntityNotFoundException("Booking not found"));
+
+        if (booking.getStatus() != Booking.BookingStatus.APPROVED) {
+            throw new IllegalStateException("Booking must be in APPROVED state to complete");
+        }
+
+        // Update booking status to COMPLETED
+        booking.setStatus(Booking.BookingStatus.COMPLETED);
+
+        // Update car status to AVAILABLE
+        Car car = booking.getAssignedCar();
+        if (car != null) {
+            car.setStatus(Car.CarStatus.AVAILABLE);
+            carRepository.save(car);
+        }
+
+        bookingRepository.save(booking);
+        return bookingMapper.toBookingResponse(booking);
+    }
+
     public Booking.BookingStatus validateStatus(String status) throws InvalidPropertiesFormatException {
         try {
             return Booking.BookingStatus.valueOf(status.toUpperCase());

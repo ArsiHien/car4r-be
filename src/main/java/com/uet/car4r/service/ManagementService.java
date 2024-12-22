@@ -1,20 +1,14 @@
 package com.uet.car4r.service;
 
-import com.uet.car4r.dto.response.RevenueResponse;
+import com.uet.car4r.dto.response.*;
 import com.uet.car4r.dto.response.carcategory.CarCategoryRentalStatisticResponse;
-import com.uet.car4r.dto.response.MonthlyRevenueResponse;
-import com.uet.car4r.dto.response.RevenueByCategoryTypeResponse;
-import com.uet.car4r.dto.response.TopCustomerResponse;
 import com.uet.car4r.mapper.CustomerMapper;
 import com.uet.car4r.mapper.ManagementMapper;
 import com.uet.car4r.projection.CarCategoryRentalStatisticsProjection;
 import com.uet.car4r.projection.MonthlyRevenueProjection;
 import com.uet.car4r.projection.RevenueByCategoryProjection;
 import com.uet.car4r.projection.TopCustomerProjection;
-import com.uet.car4r.repository.BookingRepository;
-import com.uet.car4r.repository.CarCategoryRepository;
-import com.uet.car4r.repository.CarRepository;
-import com.uet.car4r.repository.CustomerRepository;
+import com.uet.car4r.repository.*;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -35,6 +29,8 @@ public class ManagementService {
     ManagementMapper managementMapper;
     CustomerMapper customerMapper;
     CarRepository carRepository;
+    ReviewRepository reviewRepository;
+    UserRepository userRepository;
 
     public RevenueResponse getRevenueData() {
         long totalRevenue = getTotalRevenue();
@@ -42,9 +38,11 @@ public class ManagementService {
         long totalCar = carRepository.getTotalCar();
         long rentedCar = carRepository.getRentedCar();
         long availableCar = carRepository.getAvailableCar();
+        long numberOfCustomer = userRepository.getNumberOfCustomer();
         RevenueResponse response = new RevenueResponse();
         response.setTotalRevenue(totalRevenue);
         //response.setTodayRevenue(todayRevenue);
+        response.setNumberOfCustomer(numberOfCustomer);
         response.setTotalCar(totalCar);
         response.setRentedCar(rentedCar);
         response.setAvailableCar(availableCar);
@@ -110,5 +108,24 @@ public class ManagementService {
     public List<TopCustomerResponse> getTopCustomers() {
         List<TopCustomerProjection> projections = customerRepository.findTopCustomersByBookingFrequencyAndRevenue();
         return customerMapper.toTopCustomerResponse(projections);
+    }
+
+    public RatingResponse getRating() {
+        long one = reviewRepository.getOneStar();
+        long two = reviewRepository.getTwoStar();
+        long three = reviewRepository.getThreeStar();
+        long four = reviewRepository.getFourStar();
+        long five = reviewRepository.getFiveStar();
+        RatingResponse response = new RatingResponse();
+        response.setOne(one);
+        response.setTwo(two);
+        response.setThree(three);
+        response.setFour(four);
+        response.setFive(five);
+        return response;
+    }
+
+    public long getNumberOfCustomer() {
+        return userRepository.getNumberOfCustomer();
     }
 }

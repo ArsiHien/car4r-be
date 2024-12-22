@@ -39,8 +39,8 @@ public class SecurityConfig {
     http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
         .csrf(crsf -> crsf.disable())
         .authorizeHttpRequests(auth -> auth
-            .anyRequest().permitAll());
-        //.addFilterBefore(new JwtAuthenticationFilter(jwtUtil, userRepository), UsernamePasswordAuthenticationFilter.class);
+            .anyRequest().permitAll())
+        .addFilterBefore(new HostValidationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -58,5 +58,6 @@ public class SecurityConfig {
         urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", configuration);
         return urlBasedCorsConfigurationSource;
     }
+
 
 }

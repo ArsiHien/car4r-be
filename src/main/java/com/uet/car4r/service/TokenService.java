@@ -104,16 +104,30 @@ public class TokenService {
 
   }
 
+  /**
+   * Ham nay refresh token
+   * @param token: String
+   * @return Optional
+   */
   public Optional refreshAccessToken(String token) {
     Token existRefreshToken = tokenRepository.findByToken(token);
 
     // xem co ton tai refreshToken khong hoac refreshToken do con han khong
-    if (existRefreshToken == null || existRefreshToken.getExpiredAt().before(new Date())) {
+    if (existRefreshToken == null) {
+      return Optional.of(NotificationDTO.builder()
+                             .message(TypeMessage.FAIL)
+                             .messageDetail("Please Log In Again Or Sign Up")
+                             .build());
+    } else if ( existRefreshToken.getExpiredAt().before(new Date())) {
+      // xoa token o bang token
+      tokenRepository.deleteById(existRefreshToken.getId());
+
       return Optional.of(NotificationDTO.builder()
                              .message(TypeMessage.FAIL)
                              .messageDetail("Please Log In Again Or Sign Up")
                              .build());
     } else {
+      // lay email
       String email = token.split("----------")[1];
 
       User user = userRepository.getAllByEmail(email);
@@ -128,58 +142,59 @@ public class TokenService {
     }
   }
 
-  /**
-   * validate access token
-   * @param token: String
-   * @return Optional
-   */
-  public Optional validateAccessToken(String token) {
-    try {
-      Claims claims = jwtUtil.extractToken(token);
 
-      String email = claims.get("email", String.class);
-      String role = claims.get("roles", String.class);
-      Date expiration = claims.getExpiration();
+/**
+ * validate access token
+ * @param token: String
+ * @return Optional
+ */
+public Optional validateAccessToken(String token) {
+  try {
+    Claims claims = jwtUtil.extractToken(token);
 
-      if (expiration.before(new Date()) || !userRepository.existsUsersByEmail(email)) {
-        return Optional.of(false);
-      } else {
-        if (role.equals(Role.CUSTOMER)) {
-          return Optional.of(customerRepository.getCustomersByEmail(email));
-        }
+    String email = claims.get("email", String.class);
+    String role = claims.get("roles", String.class);
+    Date expiration = claims.getExpiration();
 
-        return Optional.of(userRepository.getUserByEmail(email));
+    if (expiration.before(new Date()) || !userRepository.existsUsersByEmail(email)) {
+      return Optional.of(false);
+    } else {
+      if (role.equals(Role.CUSTOMER)) {
+        return Optional.of(customerRepository.getCustomersByEmail(email));
       }
-    } catch (ExpiredJwtException expiredJwtException) {
-      System.out.println("Token expired: invalid");
-    } catch (SignatureException signatureException) {
-      System.out.println("Token signature: invalid");
-    } catch (Exception e) {
-      System.out.println("Token invalid");
+
+      return Optional.of(userRepository.getUserByEmail(email));
     }
-    return Optional.of(false);
+  } catch (ExpiredJwtException expiredJwtException) {
+    System.out.println("Token expired: invalid");
+  } catch (SignatureException signatureException) {
+    System.out.println("Token signature: invalid");
+  } catch (Exception e) {
+    System.out.println("Token invalid");
   }
+  return Optional.of(false);
+}
 
-  /**
-   * validate verify token
-   * @param token : String
-   * @return Boolean
-   */
-  public Boolean validateVerifyToken(String token) {
-    try {
-      Claims claims = jwtUtil.extractToken(token);
-      // neu dang con han va subject=CAR$R
-      if (!claims.getExpiration().before(new Date()) && claims.getSubject().equals("CAR$R")) {
-        return true;
-      }
-      return false;
-    } catch (ExpiredJwtException expiredJwtException) {
-      System.out.println("Token expired: invalid");
-    } catch (SignatureException signatureException) {
-      System.out.println("Token signature: invalid");
-    } catch (Exception e) {
-      System.out.println("Token invalid");
+/**
+ * validate verify token
+ * @param token : String
+ * @return Boolean
+ */
+public Boolean validateVerifyToken(String token) {
+  try {
+    Claims claims = jwtUtil.extractToken(token);
+    // neu dang con han va subject=CAR$R
+    if (!claims.getExpiration().before(new Date()) && claims.getSubject().equals("CAR$R")) {
+      return true;
     }
     return false;
+  } catch (ExpiredJwtException expiredJwtException) {
+    System.out.println("Token expired: invalid");
+  } catch (SignatureException signatureException) {
+    System.out.println("Token signature: invalid");
+  } catch (Exception e) {
+    System.out.println("Token invalid");
   }
+  return false;
+}
 }

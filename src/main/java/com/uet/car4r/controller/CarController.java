@@ -19,7 +19,7 @@ import java.util.List;
  * CarController
  */
 @RestController
-@RequestMapping(path = "/cars")
+@RequestMapping(path = "/api/cars")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CarController {

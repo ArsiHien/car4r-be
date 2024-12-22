@@ -151,12 +151,8 @@
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
                         </exclude>
-                        <execution>
-                            <goals>
-                                <goal>build-info</goal>
-                            </goals>
-                        </execution>
                     </excludes>
+                    <compilerArguments><arg>--enable-preview</arg></compilerArguments>
                 </configuration>
             </plugin>
             <plugin>

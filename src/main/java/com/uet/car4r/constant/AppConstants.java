@@ -4,5 +4,5 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class AppConstants {
-    public static final int NUMBER_OF_ROUTE_FILES  = 1;
+    public static final int NUMBER_OF_ROUTE_FILES  = 3;
 }
